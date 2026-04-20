@@ -1,0 +1,50 @@
+{
+  "人工智能与机器学习": {
+    "key": "ai-ml",
+    "priority": 30,
+    "categories": ["cs.AI", "cs.LG", "cs.NE", "stat.ML"],
+    "keywords": ["artificial intelligence", "machine learning", "deep learning", "neural network", "reinforcement learning", "graph neural"]
+  },
+  "计算机视觉与多媒体": {
+    "key": "cv-multimedia",
+    "priority": 20,
+    "categories": ["cs.CV", "cs.MM", "eess.IV"],
+    "keywords": ["computer vision", "image", "video", "multimedia", "visual", "detection", "segmentation"]
+  },
+  "自然语言与语音": {
+    "key": "nlp-speech",
+    "priority": 25,
+    "categories": ["cs.CL", "eess.AS", "cs.SD"],
+    "keywords": ["natural language", "language model", "text", "speech", "dialogue", "translation", "question answering"]
+  },
+  "知识计算与数据智能": {
+    "key": "knowledge-data",
+    "priority": 40,
+    "categories": ["cs.DB", "cs.IR", "cs.DL", "cs.SI", "cs.CY", "cs.DC", "cs.HC"],
+    "keywords": ["knowledge graph", "data mining", "database", "recommendation", "retrieval", "graph", "entity alignment"]
+  },
+  "系统、软件与体系结构": {
+    "key": "systems-software",
+    "priority": 50,
+    "categories": ["cs.OS", "cs.SE", "cs.AR", "cs.PF", "cs.PL", "cs.ET"],
+    "keywords": ["software", "system", "compiler", "runtime", "operating system", "architecture", "embedded"]
+  },
+  "网络、通信与安全": {
+    "key": "network-security",
+    "priority": 35,
+    "categories": ["cs.NI", "cs.CR", "cs.IT", "cs.ID"],
+    "keywords": ["network", "wireless", "communication", "security", "privacy", "cryptography", "authentication"]
+  },
+  "算法理论与形式化": {
+    "key": "algorithms-theory",
+    "priority": 45,
+    "categories": ["cs.DS", "cs.DM", "cs.CC", "cs.FL", "cs.LO", "math.CO", "math.IT"],
+    "keywords": ["algorithm", "complexity", "formal", "logic", "proof", "combinatorial", "modular decomposition"]
+  },
+  "交叉应用与智能场景": {
+    "key": "cross-domain-apps",
+    "priority": 60,
+    "categories": ["cs.RO", "cs.MA", "cs.GT", "cs.CE", "q-bio.QM", "q-fin.CP", "stat.AP"],
+    "keywords": ["robot", "medical", "healthcare", "education", "transportation", "smart city", "application"]
+  }
+}

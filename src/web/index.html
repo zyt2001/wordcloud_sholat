@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>研究主题对比时间轴</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">2005-2024 Research Comparison</p>
+          <h1 id="page-title">研究主题演化对比</h1>
+          <p id="page-subtitle" class="hero-copy">
+            从学院侧与网站侧的分段数据出发，观察主题重心如何沿时间轴变化。
+          </p>
+        </div>
+        <div class="hero-actions">
+          <div class="segment-chip">
+            <span class="chip-label">Current Segment</span>
+            <strong id="current-segment">载入中</strong>
+          </div>
+          <button id="export-button" class="ghost-button" type="button">导出页面</button>
+        </div>
+      </header>
+
+      <main class="layout-grid">
+        <section class="panel entity-panel" aria-labelledby="academy-title">
+          <div class="panel-heading">
+            <p class="panel-kicker">Academy</p>
+            <h2 id="academy-title">模拟学院用户</h2>
+          </div>
+          <div class="stats-grid" id="academy-stats"></div>
+          <div class="canvas-card">
+              <div class="canvas-card-head">
+               <h3>主题词云</h3>
+              </div>
+            <div
+              id="academy-cloud"
+              class="cloud-placeholder"
+              data-cloud-panel="academy"
+              aria-label="学院侧词云画布"
+            ></div>
+          </div>
+          <div>
+            <h3 class="list-title">当前阶段高频主题</h3>
+            <ol id="academy-topics" class="topic-list"></ol>
+          </div>
+        </section>
+
+        <section class="panel summary-panel" aria-labelledby="summary-title">
+          <div class="panel-heading compact">
+            <p class="panel-kicker">Abstract</p>
+            <h2 id="summary-title">阶段摘要</h2>
+          </div>
+          <div class="summary-card">
+            <p id="summary-lede" class="summary-lede">正在读取阶段摘要。</p>
+            <div class="summary-columns">
+              <div>
+                <h3>共同关注主题</h3>
+                <ul id="shared-topics" class="summary-list"></ul>
+              </div>
+              <div>
+                <h3>阶段说明</h3>
+                <dl class="meta-list">
+                  <div>
+                    <dt>时间范围</dt>
+                    <dd id="summary-range">-</dd>
+                  </div>
+                  <div>
+                    <dt>学院样本</dt>
+                    <dd id="summary-academy-count">-</dd>
+                  </div>
+                  <div>
+                    <dt>网站样本</dt>
+                    <dd id="summary-website-count">-</dd>
+                  </div>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel entity-panel" aria-labelledby="website-title">
+          <div class="panel-heading">
+            <p class="panel-kicker">Website</p>
+            <h2 id="website-title">模拟网站用户</h2>
+          </div>
+          <div class="stats-grid" id="website-stats"></div>
+          <div class="canvas-card">
+              <div class="canvas-card-head">
+               <h3>主题词云</h3>
+              </div>
+            <div
+              id="website-cloud"
+              class="cloud-placeholder"
+              data-cloud-panel="website"
+              aria-label="网站侧词云画布"
+            ></div>
+          </div>
+          <div>
+            <h3 class="list-title">当前阶段高频主题</h3>
+            <ol id="website-topics" class="topic-list"></ol>
+          </div>
+        </section>
+      </main>
+
+      <section class="panel timeline-panel" aria-labelledby="timeline-title">
+        <div class="timeline-heading">
+          <div>
+            <p class="panel-kicker">Timeline</p>
+            <h2 id="timeline-title">时间轴切换</h2>
+          </div>
+          <p class="timeline-note">选择分段后，标题、摘要与两侧统计会同步更新。</p>
+        </div>
+        <div id="timeline" class="timeline" role="tablist" aria-label="研究分段时间轴"></div>
+      </section>
+    </div>
+
+    <template id="stat-template">
+      <article class="stat-card">
+        <span class="stat-label"></span>
+        <strong class="stat-value"></strong>
+      </article>
+    </template>
+
+    <script src="./app.js" type="module"></script>
+  </body>
+</html>

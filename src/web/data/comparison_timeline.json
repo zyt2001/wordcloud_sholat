@@ -1,0 +1,1433 @@
+{
+  "range": "2005-2024",
+  "segments": [
+    {
+      "label": "2005-2011",
+      "academy": {
+        "name": "模拟学院用户",
+        "sampleCount": 30,
+        "otherCount": 0,
+        "topics": [
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "value": 11,
+            "share": 0.3667,
+            "state": "new",
+            "x": -280,
+            "y": -170
+          },
+          {
+            "key": "cv-multimedia",
+            "text": "计算机视觉与多媒体",
+            "value": 0,
+            "share": 0.0,
+            "state": "stable",
+            "x": 0,
+            "y": -170
+          },
+          {
+            "key": "nlp-speech",
+            "text": "自然语言与语音",
+            "value": 0,
+            "share": 0.0,
+            "state": "stable",
+            "x": 280,
+            "y": -170
+          },
+          {
+            "key": "knowledge-data",
+            "text": "知识计算与数据智能",
+            "value": 4,
+            "share": 0.1333,
+            "state": "new",
+            "x": -280,
+            "y": 0
+          },
+          {
+            "key": "systems-software",
+            "text": "系统、软件与体系结构",
+            "value": 0,
+            "share": 0.0,
+            "state": "stable",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "key": "network-security",
+            "text": "网络、通信与安全",
+            "value": 5,
+            "share": 0.1667,
+            "state": "new",
+            "x": 280,
+            "y": 0
+          },
+          {
+            "key": "algorithms-theory",
+            "text": "算法理论与形式化",
+            "value": 10,
+            "share": 0.3333,
+            "state": "new",
+            "x": -140,
+            "y": 170
+          },
+          {
+            "key": "cross-domain-apps",
+            "text": "交叉应用与智能场景",
+            "value": 0,
+            "share": 0.0,
+            "state": "stable",
+            "x": 140,
+            "y": 170
+          }
+        ]
+      },
+      "website": {
+        "name": "模拟网站用户",
+        "sampleCount": 25186,
+        "otherCount": 260,
+        "topics": [
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "value": 2522,
+            "share": 0.1001,
+            "state": "new",
+            "x": -280,
+            "y": -170
+          },
+          {
+            "key": "cv-multimedia",
+            "text": "计算机视觉与多媒体",
+            "value": 1122,
+            "share": 0.0445,
+            "state": "new",
+            "x": 0,
+            "y": -170
+          },
+          {
+            "key": "nlp-speech",
+            "text": "自然语言与语音",
+            "value": 526,
+            "share": 0.0209,
+            "state": "new",
+            "x": 280,
+            "y": -170
+          },
+          {
+            "key": "knowledge-data",
+            "text": "知识计算与数据智能",
+            "value": 3089,
+            "share": 0.1226,
+            "state": "new",
+            "x": -280,
+            "y": 0
+          },
+          {
+            "key": "systems-software",
+            "text": "系统、软件与体系结构",
+            "value": 1886,
+            "share": 0.0749,
+            "state": "new",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "key": "network-security",
+            "text": "网络、通信与安全",
+            "value": 7032,
+            "share": 0.2792,
+            "state": "new",
+            "x": 280,
+            "y": 0
+          },
+          {
+            "key": "algorithms-theory",
+            "text": "算法理论与形式化",
+            "value": 7511,
+            "share": 0.2982,
+            "state": "new",
+            "x": -140,
+            "y": 170
+          },
+          {
+            "key": "cross-domain-apps",
+            "text": "交叉应用与智能场景",
+            "value": 1238,
+            "share": 0.0492,
+            "state": "new",
+            "x": 140,
+            "y": 170
+          }
+        ]
+      },
+      "summary": {
+        "academyTop": [
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "value": 11,
+            "share": 0.3667
+          },
+          {
+            "key": "algorithms-theory",
+            "text": "算法理论与形式化",
+            "value": 10,
+            "share": 0.3333
+          },
+          {
+            "key": "network-security",
+            "text": "网络、通信与安全",
+            "value": 5,
+            "share": 0.1667
+          }
+        ],
+        "websiteTop": [
+          {
+            "key": "algorithms-theory",
+            "text": "算法理论与形式化",
+            "value": 7511,
+            "share": 0.2982
+          },
+          {
+            "key": "network-security",
+            "text": "网络、通信与安全",
+            "value": 7032,
+            "share": 0.2792
+          },
+          {
+            "key": "knowledge-data",
+            "text": "知识计算与数据智能",
+            "value": 3089,
+            "share": 0.1226
+          }
+        ],
+        "sharedTop": [
+          {
+            "key": "algorithms-theory",
+            "text": "算法理论与形式化",
+            "academyValue": 10,
+            "websiteValue": 7511,
+            "academyShare": 0.3333,
+            "websiteShare": 0.2982,
+            "balanceScore": 0.3148
+          },
+          {
+            "key": "network-security",
+            "text": "网络、通信与安全",
+            "academyValue": 5,
+            "websiteValue": 7032,
+            "academyShare": 0.1667,
+            "websiteShare": 0.2792,
+            "balanceScore": 0.2088
+          },
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "academyValue": 11,
+            "websiteValue": 2522,
+            "academyShare": 0.3667,
+            "websiteShare": 0.1001,
+            "balanceScore": 0.1573
+          }
+        ],
+        "academySampleCount": 30,
+        "websiteSampleCount": 25186,
+        "academyClassifiedCount": 30,
+        "websiteClassifiedCount": 24926,
+        "academyOtherCount": 0,
+        "websiteOtherCount": 260
+      }
+    },
+    {
+      "label": "2012-2016",
+      "academy": {
+        "name": "模拟学院用户",
+        "sampleCount": 82,
+        "otherCount": 1,
+        "topics": [
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "value": 17,
+            "share": 0.2073,
+            "state": "rise",
+            "x": -280,
+            "y": -170
+          },
+          {
+            "key": "cv-multimedia",
+            "text": "计算机视觉与多媒体",
+            "value": 22,
+            "share": 0.2683,
+            "state": "new",
+            "x": 0,
+            "y": -170
+          },
+          {
+            "key": "nlp-speech",
+            "text": "自然语言与语音",
+            "value": 1,
+            "share": 0.0122,
+            "state": "new",
+            "x": 280,
+            "y": -170
+          },
+          {
+            "key": "knowledge-data",
+            "text": "知识计算与数据智能",
+            "value": 8,
+            "share": 0.0976,
+            "state": "rise",
+            "x": -280,
+            "y": 0
+          },
+          {
+            "key": "systems-software",
+            "text": "系统、软件与体系结构",
+            "value": 7,
+            "share": 0.0854,
+            "state": "new",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "key": "network-security",
+            "text": "网络、通信与安全",
+            "value": 17,
+            "share": 0.2073,
+            "state": "rise",
+            "x": 280,
+            "y": 0
+          },
+          {
+            "key": "algorithms-theory",
+            "text": "算法理论与形式化",
+            "value": 9,
+            "share": 0.1098,
+            "state": "fall",
+            "x": -140,
+            "y": 170
+          },
+          {
+            "key": "cross-domain-apps",
+            "text": "交叉应用与智能场景",
+            "value": 0,
+            "share": 0.0,
+            "state": "stable",
+            "x": 140,
+            "y": 170
+          }
+        ]
+      },
+      "website": {
+        "name": "模拟网站用户",
+        "sampleCount": 69658,
+        "otherCount": 502,
+        "topics": [
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "value": 10532,
+            "share": 0.1512,
+            "state": "rise",
+            "x": -280,
+            "y": -170
+          },
+          {
+            "key": "cv-multimedia",
+            "text": "计算机视觉与多媒体",
+            "value": 7164,
+            "share": 0.1028,
+            "state": "rise",
+            "x": 0,
+            "y": -170
+          },
+          {
+            "key": "nlp-speech",
+            "text": "自然语言与语音",
+            "value": 2868,
+            "share": 0.0412,
+            "state": "rise",
+            "x": 280,
+            "y": -170
+          },
+          {
+            "key": "knowledge-data",
+            "text": "知识计算与数据智能",
+            "value": 9948,
+            "share": 0.1428,
+            "state": "rise",
+            "x": -280,
+            "y": 0
+          },
+          {
+            "key": "systems-software",
+            "text": "系统、软件与体系结构",
+            "value": 5013,
+            "share": 0.072,
+            "state": "rise",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "key": "network-security",
+            "text": "网络、通信与安全",
+            "value": 15370,
+            "share": 0.2206,
+            "state": "rise",
+            "x": 280,
+            "y": 0
+          },
+          {
+            "key": "algorithms-theory",
+            "text": "算法理论与形式化",
+            "value": 14814,
+            "share": 0.2127,
+            "state": "rise",
+            "x": -140,
+            "y": 170
+          },
+          {
+            "key": "cross-domain-apps",
+            "text": "交叉应用与智能场景",
+            "value": 3447,
+            "share": 0.0495,
+            "state": "rise",
+            "x": 140,
+            "y": 170
+          }
+        ]
+      },
+      "summary": {
+        "academyTop": [
+          {
+            "key": "cv-multimedia",
+            "text": "计算机视觉与多媒体",
+            "value": 22,
+            "share": 0.2683
+          },
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "value": 17,
+            "share": 0.2073
+          },
+          {
+            "key": "network-security",
+            "text": "网络、通信与安全",
+            "value": 17,
+            "share": 0.2073
+          }
+        ],
+        "websiteTop": [
+          {
+            "key": "network-security",
+            "text": "网络、通信与安全",
+            "value": 15370,
+            "share": 0.2206
+          },
+          {
+            "key": "algorithms-theory",
+            "text": "算法理论与形式化",
+            "value": 14814,
+            "share": 0.2127
+          },
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "value": 10532,
+            "share": 0.1512
+          }
+        ],
+        "sharedTop": [
+          {
+            "key": "network-security",
+            "text": "网络、通信与安全",
+            "academyValue": 17,
+            "websiteValue": 15370,
+            "academyShare": 0.2073,
+            "websiteShare": 0.2206,
+            "balanceScore": 0.2137
+          },
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "academyValue": 17,
+            "websiteValue": 10532,
+            "academyShare": 0.2073,
+            "websiteShare": 0.1512,
+            "balanceScore": 0.1749
+          },
+          {
+            "key": "cv-multimedia",
+            "text": "计算机视觉与多媒体",
+            "academyValue": 22,
+            "websiteValue": 7164,
+            "academyShare": 0.2683,
+            "websiteShare": 0.1028,
+            "balanceScore": 0.1486
+          }
+        ],
+        "academySampleCount": 82,
+        "websiteSampleCount": 69658,
+        "academyClassifiedCount": 81,
+        "websiteClassifiedCount": 69156,
+        "academyOtherCount": 1,
+        "websiteOtherCount": 502
+      }
+    },
+    {
+      "label": "2017-2019",
+      "academy": {
+        "name": "模拟学院用户",
+        "sampleCount": 254,
+        "otherCount": 0,
+        "topics": [
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "value": 56,
+            "share": 0.2205,
+            "state": "rise",
+            "x": -280,
+            "y": -170
+          },
+          {
+            "key": "cv-multimedia",
+            "text": "计算机视觉与多媒体",
+            "value": 128,
+            "share": 0.5039,
+            "state": "rise",
+            "x": 0,
+            "y": -170
+          },
+          {
+            "key": "nlp-speech",
+            "text": "自然语言与语音",
+            "value": 10,
+            "share": 0.0394,
+            "state": "rise",
+            "x": 280,
+            "y": -170
+          },
+          {
+            "key": "knowledge-data",
+            "text": "知识计算与数据智能",
+            "value": 19,
+            "share": 0.0748,
+            "state": "rise",
+            "x": -280,
+            "y": 0
+          },
+          {
+            "key": "systems-software",
+            "text": "系统、软件与体系结构",
+            "value": 8,
+            "share": 0.0315,
+            "state": "rise",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "key": "network-security",
+            "text": "网络、通信与安全",
+            "value": 24,
+            "share": 0.0945,
+            "state": "rise",
+            "x": 280,
+            "y": 0
+          },
+          {
+            "key": "algorithms-theory",
+            "text": "算法理论与形式化",
+            "value": 4,
+            "share": 0.0157,
+            "state": "fall",
+            "x": -140,
+            "y": 170
+          },
+          {
+            "key": "cross-domain-apps",
+            "text": "交叉应用与智能场景",
+            "value": 5,
+            "share": 0.0197,
+            "state": "new",
+            "x": 140,
+            "y": 170
+          }
+        ]
+      },
+      "website": {
+        "name": "模拟网站用户",
+        "sampleCount": 100083,
+        "otherCount": 341,
+        "topics": [
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "value": 23578,
+            "share": 0.2356,
+            "state": "rise",
+            "x": -280,
+            "y": -170
+          },
+          {
+            "key": "cv-multimedia",
+            "text": "计算机视觉与多媒体",
+            "value": 19671,
+            "share": 0.1965,
+            "state": "rise",
+            "x": 0,
+            "y": -170
+          },
+          {
+            "key": "nlp-speech",
+            "text": "自然语言与语音",
+            "value": 9192,
+            "share": 0.0918,
+            "state": "rise",
+            "x": 280,
+            "y": -170
+          },
+          {
+            "key": "knowledge-data",
+            "text": "知识计算与数据智能",
+            "value": 11127,
+            "share": 0.1112,
+            "state": "rise",
+            "x": -280,
+            "y": 0
+          },
+          {
+            "key": "systems-software",
+            "text": "系统、软件与体系结构",
+            "value": 5395,
+            "share": 0.0539,
+            "state": "rise",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "key": "network-security",
+            "text": "网络、通信与安全",
+            "value": 13846,
+            "share": 0.1383,
+            "state": "fall",
+            "x": 280,
+            "y": 0
+          },
+          {
+            "key": "algorithms-theory",
+            "text": "算法理论与形式化",
+            "value": 11598,
+            "share": 0.1159,
+            "state": "fall",
+            "x": -140,
+            "y": 170
+          },
+          {
+            "key": "cross-domain-apps",
+            "text": "交叉应用与智能场景",
+            "value": 5335,
+            "share": 0.0533,
+            "state": "rise",
+            "x": 140,
+            "y": 170
+          }
+        ]
+      },
+      "summary": {
+        "academyTop": [
+          {
+            "key": "cv-multimedia",
+            "text": "计算机视觉与多媒体",
+            "value": 128,
+            "share": 0.5039
+          },
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "value": 56,
+            "share": 0.2205
+          },
+          {
+            "key": "network-security",
+            "text": "网络、通信与安全",
+            "value": 24,
+            "share": 0.0945
+          }
+        ],
+        "websiteTop": [
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "value": 23578,
+            "share": 0.2356
+          },
+          {
+            "key": "cv-multimedia",
+            "text": "计算机视觉与多媒体",
+            "value": 19671,
+            "share": 0.1965
+          },
+          {
+            "key": "network-security",
+            "text": "网络、通信与安全",
+            "value": 13846,
+            "share": 0.1383
+          }
+        ],
+        "sharedTop": [
+          {
+            "key": "cv-multimedia",
+            "text": "计算机视觉与多媒体",
+            "academyValue": 128,
+            "websiteValue": 19671,
+            "academyShare": 0.5039,
+            "websiteShare": 0.1965,
+            "balanceScore": 0.2827
+          },
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "academyValue": 56,
+            "websiteValue": 23578,
+            "academyShare": 0.2205,
+            "websiteShare": 0.2356,
+            "balanceScore": 0.2278
+          },
+          {
+            "key": "network-security",
+            "text": "网络、通信与安全",
+            "academyValue": 24,
+            "websiteValue": 13846,
+            "academyShare": 0.0945,
+            "websiteShare": 0.1383,
+            "balanceScore": 0.1123
+          }
+        ],
+        "academySampleCount": 254,
+        "websiteSampleCount": 100083,
+        "academyClassifiedCount": 254,
+        "websiteClassifiedCount": 99742,
+        "academyOtherCount": 0,
+        "websiteOtherCount": 341
+      }
+    },
+    {
+      "label": "2020-2021",
+      "academy": {
+        "name": "模拟学院用户",
+        "sampleCount": 390,
+        "otherCount": 0,
+        "topics": [
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "value": 100,
+            "share": 0.2564,
+            "state": "rise",
+            "x": -280,
+            "y": -170
+          },
+          {
+            "key": "cv-multimedia",
+            "text": "计算机视觉与多媒体",
+            "value": 179,
+            "share": 0.459,
+            "state": "rise",
+            "x": 0,
+            "y": -170
+          },
+          {
+            "key": "nlp-speech",
+            "text": "自然语言与语音",
+            "value": 26,
+            "share": 0.0667,
+            "state": "rise",
+            "x": 280,
+            "y": -170
+          },
+          {
+            "key": "knowledge-data",
+            "text": "知识计算与数据智能",
+            "value": 26,
+            "share": 0.0667,
+            "state": "rise",
+            "x": -280,
+            "y": 0
+          },
+          {
+            "key": "systems-software",
+            "text": "系统、软件与体系结构",
+            "value": 10,
+            "share": 0.0256,
+            "state": "rise",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "key": "network-security",
+            "text": "网络、通信与安全",
+            "value": 27,
+            "share": 0.0692,
+            "state": "rise",
+            "x": 280,
+            "y": 0
+          },
+          {
+            "key": "algorithms-theory",
+            "text": "算法理论与形式化",
+            "value": 1,
+            "share": 0.0026,
+            "state": "fall",
+            "x": -140,
+            "y": 170
+          },
+          {
+            "key": "cross-domain-apps",
+            "text": "交叉应用与智能场景",
+            "value": 21,
+            "share": 0.0538,
+            "state": "rise",
+            "x": 140,
+            "y": 170
+          }
+        ]
+      },
+      "website": {
+        "name": "模拟网站用户",
+        "sampleCount": 111102,
+        "otherCount": 129,
+        "topics": [
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "value": 33399,
+            "share": 0.3006,
+            "state": "rise",
+            "x": -280,
+            "y": -170
+          },
+          {
+            "key": "cv-multimedia",
+            "text": "计算机视觉与多媒体",
+            "value": 23045,
+            "share": 0.2074,
+            "state": "rise",
+            "x": 0,
+            "y": -170
+          },
+          {
+            "key": "nlp-speech",
+            "text": "自然语言与语音",
+            "value": 12583,
+            "share": 0.1133,
+            "state": "rise",
+            "x": 280,
+            "y": -170
+          },
+          {
+            "key": "knowledge-data",
+            "text": "知识计算与数据智能",
+            "value": 11045,
+            "share": 0.0994,
+            "state": "fall",
+            "x": -280,
+            "y": 0
+          },
+          {
+            "key": "systems-software",
+            "text": "系统、软件与体系结构",
+            "value": 5038,
+            "share": 0.0453,
+            "state": "fall",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "key": "network-security",
+            "text": "网络、通信与安全",
+            "value": 10955,
+            "share": 0.0986,
+            "state": "fall",
+            "x": 280,
+            "y": 0
+          },
+          {
+            "key": "algorithms-theory",
+            "text": "算法理论与形式化",
+            "value": 8295,
+            "share": 0.0747,
+            "state": "fall",
+            "x": -140,
+            "y": 170
+          },
+          {
+            "key": "cross-domain-apps",
+            "text": "交叉应用与智能场景",
+            "value": 6613,
+            "share": 0.0595,
+            "state": "rise",
+            "x": 140,
+            "y": 170
+          }
+        ]
+      },
+      "summary": {
+        "academyTop": [
+          {
+            "key": "cv-multimedia",
+            "text": "计算机视觉与多媒体",
+            "value": 179,
+            "share": 0.459
+          },
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "value": 100,
+            "share": 0.2564
+          },
+          {
+            "key": "network-security",
+            "text": "网络、通信与安全",
+            "value": 27,
+            "share": 0.0692
+          }
+        ],
+        "websiteTop": [
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "value": 33399,
+            "share": 0.3006
+          },
+          {
+            "key": "cv-multimedia",
+            "text": "计算机视觉与多媒体",
+            "value": 23045,
+            "share": 0.2074
+          },
+          {
+            "key": "nlp-speech",
+            "text": "自然语言与语音",
+            "value": 12583,
+            "share": 0.1133
+          }
+        ],
+        "sharedTop": [
+          {
+            "key": "cv-multimedia",
+            "text": "计算机视觉与多媒体",
+            "academyValue": 179,
+            "websiteValue": 23045,
+            "academyShare": 0.459,
+            "websiteShare": 0.2074,
+            "balanceScore": 0.2857
+          },
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "academyValue": 100,
+            "websiteValue": 33399,
+            "academyShare": 0.2564,
+            "websiteShare": 0.3006,
+            "balanceScore": 0.2767
+          },
+          {
+            "key": "nlp-speech",
+            "text": "自然语言与语音",
+            "academyValue": 26,
+            "websiteValue": 12583,
+            "academyShare": 0.0667,
+            "websiteShare": 0.1133,
+            "balanceScore": 0.084
+          }
+        ],
+        "academySampleCount": 390,
+        "websiteSampleCount": 111102,
+        "academyClassifiedCount": 390,
+        "websiteClassifiedCount": 110973,
+        "academyOtherCount": 0,
+        "websiteOtherCount": 129
+      }
+    },
+    {
+      "label": "2022-2023",
+      "academy": {
+        "name": "模拟学院用户",
+        "sampleCount": 600,
+        "otherCount": 0,
+        "topics": [
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "value": 139,
+            "share": 0.2317,
+            "state": "rise",
+            "x": -280,
+            "y": -170
+          },
+          {
+            "key": "cv-multimedia",
+            "text": "计算机视觉与多媒体",
+            "value": 242,
+            "share": 0.4033,
+            "state": "rise",
+            "x": 0,
+            "y": -170
+          },
+          {
+            "key": "nlp-speech",
+            "text": "自然语言与语音",
+            "value": 116,
+            "share": 0.1933,
+            "state": "rise",
+            "x": 280,
+            "y": -170
+          },
+          {
+            "key": "knowledge-data",
+            "text": "知识计算与数据智能",
+            "value": 37,
+            "share": 0.0617,
+            "state": "rise",
+            "x": -280,
+            "y": 0
+          },
+          {
+            "key": "systems-software",
+            "text": "系统、软件与体系结构",
+            "value": 9,
+            "share": 0.015,
+            "state": "fall",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "key": "network-security",
+            "text": "网络、通信与安全",
+            "value": 37,
+            "share": 0.0617,
+            "state": "rise",
+            "x": 280,
+            "y": 0
+          },
+          {
+            "key": "algorithms-theory",
+            "text": "算法理论与形式化",
+            "value": 5,
+            "share": 0.0083,
+            "state": "rise",
+            "x": -140,
+            "y": 170
+          },
+          {
+            "key": "cross-domain-apps",
+            "text": "交叉应用与智能场景",
+            "value": 15,
+            "share": 0.025,
+            "state": "fall",
+            "x": 140,
+            "y": 170
+          }
+        ]
+      },
+      "website": {
+        "name": "模拟网站用户",
+        "sampleCount": 142198,
+        "otherCount": 150,
+        "topics": [
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "value": 42802,
+            "share": 0.301,
+            "state": "rise",
+            "x": -280,
+            "y": -170
+          },
+          {
+            "key": "cv-multimedia",
+            "text": "计算机视觉与多媒体",
+            "value": 32681,
+            "share": 0.2298,
+            "state": "rise",
+            "x": 0,
+            "y": -170
+          },
+          {
+            "key": "nlp-speech",
+            "text": "自然语言与语音",
+            "value": 18654,
+            "share": 0.1312,
+            "state": "rise",
+            "x": 280,
+            "y": -170
+          },
+          {
+            "key": "knowledge-data",
+            "text": "知识计算与数据智能",
+            "value": 12078,
+            "share": 0.0849,
+            "state": "rise",
+            "x": -280,
+            "y": 0
+          },
+          {
+            "key": "systems-software",
+            "text": "系统、软件与体系结构",
+            "value": 5792,
+            "share": 0.0407,
+            "state": "rise",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "key": "network-security",
+            "text": "网络、通信与安全",
+            "value": 12026,
+            "share": 0.0846,
+            "state": "rise",
+            "x": 280,
+            "y": 0
+          },
+          {
+            "key": "algorithms-theory",
+            "text": "算法理论与形式化",
+            "value": 8411,
+            "share": 0.0591,
+            "state": "rise",
+            "x": -140,
+            "y": 170
+          },
+          {
+            "key": "cross-domain-apps",
+            "text": "交叉应用与智能场景",
+            "value": 9604,
+            "share": 0.0675,
+            "state": "rise",
+            "x": 140,
+            "y": 170
+          }
+        ]
+      },
+      "summary": {
+        "academyTop": [
+          {
+            "key": "cv-multimedia",
+            "text": "计算机视觉与多媒体",
+            "value": 242,
+            "share": 0.4033
+          },
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "value": 139,
+            "share": 0.2317
+          },
+          {
+            "key": "nlp-speech",
+            "text": "自然语言与语音",
+            "value": 116,
+            "share": 0.1933
+          }
+        ],
+        "websiteTop": [
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "value": 42802,
+            "share": 0.301
+          },
+          {
+            "key": "cv-multimedia",
+            "text": "计算机视觉与多媒体",
+            "value": 32681,
+            "share": 0.2298
+          },
+          {
+            "key": "nlp-speech",
+            "text": "自然语言与语音",
+            "value": 18654,
+            "share": 0.1312
+          }
+        ],
+        "sharedTop": [
+          {
+            "key": "cv-multimedia",
+            "text": "计算机视觉与多媒体",
+            "academyValue": 242,
+            "websiteValue": 32681,
+            "academyShare": 0.4033,
+            "websiteShare": 0.2298,
+            "balanceScore": 0.2928
+          },
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "academyValue": 139,
+            "websiteValue": 42802,
+            "academyShare": 0.2317,
+            "websiteShare": 0.301,
+            "balanceScore": 0.2618
+          },
+          {
+            "key": "nlp-speech",
+            "text": "自然语言与语音",
+            "academyValue": 116,
+            "websiteValue": 18654,
+            "academyShare": 0.1933,
+            "websiteShare": 0.1312,
+            "balanceScore": 0.1563
+          }
+        ],
+        "academySampleCount": 600,
+        "websiteSampleCount": 142198,
+        "academyClassifiedCount": 600,
+        "websiteClassifiedCount": 142048,
+        "academyOtherCount": 0,
+        "websiteOtherCount": 150
+      }
+    },
+    {
+      "label": "2024",
+      "academy": {
+        "name": "模拟学院用户",
+        "sampleCount": 520,
+        "otherCount": 0,
+        "topics": [
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "value": 130,
+            "share": 0.25,
+            "state": "fall",
+            "x": -280,
+            "y": -170
+          },
+          {
+            "key": "cv-multimedia",
+            "text": "计算机视觉与多媒体",
+            "value": 179,
+            "share": 0.3442,
+            "state": "fall",
+            "x": 0,
+            "y": -170
+          },
+          {
+            "key": "nlp-speech",
+            "text": "自然语言与语音",
+            "value": 113,
+            "share": 0.2173,
+            "state": "fall",
+            "x": 280,
+            "y": -170
+          },
+          {
+            "key": "knowledge-data",
+            "text": "知识计算与数据智能",
+            "value": 26,
+            "share": 0.05,
+            "state": "fall",
+            "x": -280,
+            "y": 0
+          },
+          {
+            "key": "systems-software",
+            "text": "系统、软件与体系结构",
+            "value": 9,
+            "share": 0.0173,
+            "state": "stable",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "key": "network-security",
+            "text": "网络、通信与安全",
+            "value": 36,
+            "share": 0.0692,
+            "state": "fall",
+            "x": 280,
+            "y": 0
+          },
+          {
+            "key": "algorithms-theory",
+            "text": "算法理论与形式化",
+            "value": 4,
+            "share": 0.0077,
+            "state": "fall",
+            "x": -140,
+            "y": 170
+          },
+          {
+            "key": "cross-domain-apps",
+            "text": "交叉应用与智能场景",
+            "value": 23,
+            "share": 0.0442,
+            "state": "rise",
+            "x": 140,
+            "y": 170
+          }
+        ]
+      },
+      "website": {
+        "name": "模拟网站用户",
+        "sampleCount": 112265,
+        "otherCount": 78,
+        "topics": [
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "value": 33538,
+            "share": 0.2987,
+            "state": "fall",
+            "x": -280,
+            "y": -170
+          },
+          {
+            "key": "cv-multimedia",
+            "text": "计算机视觉与多媒体",
+            "value": 25863,
+            "share": 0.2304,
+            "state": "fall",
+            "x": 0,
+            "y": -170
+          },
+          {
+            "key": "nlp-speech",
+            "text": "自然语言与语音",
+            "value": 17622,
+            "share": 0.157,
+            "state": "fall",
+            "x": 280,
+            "y": -170
+          },
+          {
+            "key": "knowledge-data",
+            "text": "知识计算与数据智能",
+            "value": 9527,
+            "share": 0.0849,
+            "state": "fall",
+            "x": -280,
+            "y": 0
+          },
+          {
+            "key": "systems-software",
+            "text": "系统、软件与体系结构",
+            "value": 4535,
+            "share": 0.0404,
+            "state": "fall",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "key": "network-security",
+            "text": "网络、通信与安全",
+            "value": 7837,
+            "share": 0.0698,
+            "state": "fall",
+            "x": 280,
+            "y": 0
+          },
+          {
+            "key": "algorithms-theory",
+            "text": "算法理论与形式化",
+            "value": 5389,
+            "share": 0.048,
+            "state": "fall",
+            "x": -140,
+            "y": 170
+          },
+          {
+            "key": "cross-domain-apps",
+            "text": "交叉应用与智能场景",
+            "value": 7876,
+            "share": 0.0702,
+            "state": "fall",
+            "x": 140,
+            "y": 170
+          }
+        ]
+      },
+      "summary": {
+        "academyTop": [
+          {
+            "key": "cv-multimedia",
+            "text": "计算机视觉与多媒体",
+            "value": 179,
+            "share": 0.3442
+          },
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "value": 130,
+            "share": 0.25
+          },
+          {
+            "key": "nlp-speech",
+            "text": "自然语言与语音",
+            "value": 113,
+            "share": 0.2173
+          }
+        ],
+        "websiteTop": [
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "value": 33538,
+            "share": 0.2987
+          },
+          {
+            "key": "cv-multimedia",
+            "text": "计算机视觉与多媒体",
+            "value": 25863,
+            "share": 0.2304
+          },
+          {
+            "key": "nlp-speech",
+            "text": "自然语言与语音",
+            "value": 17622,
+            "share": 0.157
+          }
+        ],
+        "sharedTop": [
+          {
+            "key": "cv-multimedia",
+            "text": "计算机视觉与多媒体",
+            "academyValue": 179,
+            "websiteValue": 25863,
+            "academyShare": 0.3442,
+            "websiteShare": 0.2304,
+            "balanceScore": 0.276
+          },
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "academyValue": 130,
+            "websiteValue": 33538,
+            "academyShare": 0.25,
+            "websiteShare": 0.2987,
+            "balanceScore": 0.2722
+          },
+          {
+            "key": "nlp-speech",
+            "text": "自然语言与语音",
+            "academyValue": 113,
+            "websiteValue": 17622,
+            "academyShare": 0.2173,
+            "websiteShare": 0.157,
+            "balanceScore": 0.1823
+          }
+        ],
+        "academySampleCount": 520,
+        "websiteSampleCount": 112265,
+        "academyClassifiedCount": 520,
+        "websiteClassifiedCount": 112187,
+        "academyOtherCount": 0,
+        "websiteOtherCount": 78
+      }
+    }
+  ]
+}
