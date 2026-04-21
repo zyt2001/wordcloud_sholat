@@ -11,6 +11,7 @@ test-results/
 
 # Local temp files
 tmp_*.js
+.worktrees/
 
 # Legacy / non-showcase materials
 社交网络应用/
