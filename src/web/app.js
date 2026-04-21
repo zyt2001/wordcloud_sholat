@@ -1,43 +1,26 @@
 const state = {
   dataset: null,
+  keywords: null,
   activeIndex: 0,
 };
 
 const CLOUD_LAYOUT = {
   width: 640,
-  height: 420,
+  height: 480,
   centerX: 320,
-  centerY: 210,
-  scaleX: 0.84,
-  scaleY: 0.82,
-  paddingX: 20,
-  paddingY: 24,
+  centerY: 240,
+  paddingX: 16,
+  paddingY: 16,
 };
 
 const WORD_LAYOUT = {
-  sizeMin: 13,
-  sizeMax: 22,
-  sizeForZero: 12,
-  minGap: 10,
-  candidateOffsets: [
-    [0, 0],
-    [0, -30],
-    [0, 30],
-    [-34, 0],
-    [34, 0],
-    [-42, -24],
-    [42, -24],
-    [-42, 24],
-    [42, 24],
-    [-64, 0],
-    [64, 0],
-    [0, -54],
-    [0, 54],
-    [-74, -34],
-    [74, -34],
-    [-74, 34],
-    [74, 34],
-  ],
+  sizeMin: 11,
+  sizeMax: 42,
+  minGap: 4,
+  spiralStep: 0.15,
+  spiralGrowth: 0.45,
+  maxIterations: 4000,
+  rotateChance: 0.3,
 };
 
 const STATE_LABELS = {
@@ -48,45 +31,43 @@ const STATE_LABELS = {
 };
 
 const elements = {
-  pageTitle: document.querySelector("#page-title"),
-  pageSubtitle: document.querySelector("#page-subtitle"),
-  currentSegment: document.querySelector("#current-segment"),
   academyTitle: document.querySelector("#academy-title"),
   websiteTitle: document.querySelector("#website-title"),
   academyStats: document.querySelector("#academy-stats"),
   websiteStats: document.querySelector("#website-stats"),
   academyTopics: document.querySelector("#academy-topics"),
   websiteTopics: document.querySelector("#website-topics"),
-  sharedTopics: document.querySelector("#shared-topics"),
-  summaryLede: document.querySelector("#summary-lede"),
-  summaryRange: document.querySelector("#summary-range"),
-  summaryAcademyCount: document.querySelector("#summary-academy-count"),
-  summaryWebsiteCount: document.querySelector("#summary-website-count"),
   academyCloud: document.querySelector("#academy-cloud"),
   websiteCloud: document.querySelector("#website-cloud"),
   timeline: document.querySelector("#timeline"),
-  exportButton: document.querySelector("#export-button"),
   statTemplate: document.querySelector("#stat-template"),
 };
 
 void initialize();
 
 async function initialize() {
-  bindEvents();
-
   try {
-    const response = await fetch("./data/comparison_timeline.json");
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
+    const [timelineResponse, keywordsResponse] = await Promise.all([
+      fetch("./data/comparison_timeline.json"),
+      fetch("./data/topic_keywords.json"),
+    ]);
+
+    if (!timelineResponse.ok) {
+      throw new Error(`HTTP ${timelineResponse.status}`);
+    }
+    if (!keywordsResponse.ok) {
+      throw new Error(`Keywords HTTP ${keywordsResponse.status}`);
     }
 
-    const dataset = await response.json();
+    const dataset = await timelineResponse.json();
+    const keywords = await keywordsResponse.json();
     const segments = Array.isArray(dataset.segments) ? dataset.segments : [];
     if (segments.length === 0) {
       throw new Error("comparison_timeline.json 中没有可用 segment");
     }
 
     state.dataset = dataset;
+    state.keywords = keywords;
     state.activeIndex = 0;
 
     renderTimeline();
@@ -94,12 +75,6 @@ async function initialize() {
   } catch (error) {
     renderError(error instanceof Error ? error.message : "页面初始化失败");
   }
-}
-
-function bindEvents() {
-  elements.exportButton?.addEventListener("click", () => {
-    window.print();
-  });
 }
 
 function renderTimeline() {
@@ -157,9 +132,6 @@ function renderActiveSegment() {
   const academyTop = Array.isArray(summary.academyTop) ? summary.academyTop : [];
   const websiteTop = Array.isArray(summary.websiteTop) ? summary.websiteTop : [];
 
-  elements.pageTitle.textContent = `研究主题演化对比 · ${segment.label}`;
-  elements.pageSubtitle.textContent = buildSubtitle(segment.label, sharedTop);
-  elements.currentSegment.textContent = segment.label;
   elements.academyTitle.textContent = academy.name ?? "模拟学院用户";
   elements.websiteTitle.textContent = website.name ?? "模拟网站用户";
 
@@ -181,12 +153,6 @@ function renderActiveSegment() {
 
   renderTopicList(elements.academyTopics, academyTop, (topic) => `${formatPercent(topic.share)} · ${formatNumber(topic.value)}`);
   renderTopicList(elements.websiteTopics, websiteTop, (topic) => `${formatPercent(topic.share)} · ${formatNumber(topic.value)}`);
-  renderTopicList(elements.sharedTopics, sharedTop, (topic) => `学院 ${formatPercent(topic.academyShare)} / 网站 ${formatPercent(topic.websiteShare)}`);
-
-  elements.summaryLede.textContent = buildSummary(segment.label, academyTop[0], websiteTop[0], sharedTop[0]);
-  elements.summaryRange.textContent = `${state.dataset?.range ?? "-"} · 当前聚焦 ${segment.label}`;
-  elements.summaryAcademyCount.textContent = formatNumber(summary.academySampleCount ?? academy.sampleCount ?? 0);
-  elements.summaryWebsiteCount.textContent = formatNumber(summary.websiteSampleCount ?? website.sampleCount ?? 0);
 }
 
 function renderStats(container, stats) {
@@ -231,11 +197,11 @@ function renderCloudPanels(segment) {
   const academy = segment?.academy ?? null;
   const website = segment?.website ?? null;
 
-  renderTopicCloud(elements.academyCloud, academy, segment?.label ?? "当前阶段", "academy");
-  renderTopicCloud(elements.websiteCloud, website, segment?.label ?? "当前阶段", "website");
+  renderTopicCloud(elements.academyCloud, academy, segment?.label ?? "当前阶段");
+  renderTopicCloud(elements.websiteCloud, website, segment?.label ?? "当前阶段");
 }
 
-function renderTopicCloud(container, sideData, segmentLabel, sideKey) {
+function renderTopicCloud(container, sideData, segmentLabel) {
   if (!container) {
     return;
   }
@@ -258,100 +224,152 @@ function renderTopicCloud(container, sideData, segmentLabel, sideKey) {
   svg.setAttribute("role", "img");
   svg.setAttribute("aria-label", `${sideData?.name ?? "当前侧"} ${segmentLabel} 主题词云`);
 
-  const maxValue = Math.max(...topics.map((topic) => Number(topic.value) || 0), 1);
-  const maxShare = Math.max(...topics.map((topic) => Number(topic.share) || 0), 0.01);
-  const layouts = buildTopicLayouts(topics, { maxValue, maxShare });
+  const wordList = expandTopicsToWords(topics, state.keywords);
+  const layouts = buildSpiralLayouts(wordList);
 
   layouts.forEach((layout) => {
-    svg.append(buildWordNode(layout, sideKey));
+    svg.append(buildWordNode(layout));
   });
 
   container.append(svg);
 }
 
-function buildTopicLayouts(topics, scale) {
-  const placedBounds = [];
+function expandTopicsToWords(topics, keywordMap) {
+  const words = [];
+  const seededRandom = createSeededRandom(42);
 
-  const prioritized = topics
-    .map((topic, index) => ({ topic, index }))
-    .sort((left, right) => {
-      return (Number(right.topic.value) || 0) - (Number(left.topic.value) || 0);
+  for (const topic of topics) {
+    const share = Number(topic.share) || 0;
+    const value = Number(topic.value) || 0;
+    const topicKey = topic.key;
+    const kwData = keywordMap?.[topicKey];
+    const color = kwData?.color ?? "#555";
+    const subKeywords = kwData?.keywords ?? [];
+
+    words.push({
+      text: topic.text,
+      weight: share,
+      topicKey,
+      color,
+      isCategory: true,
+      rotated: false,
+      isMuted: value === 0,
+      topic,
     });
 
-  const layouts = prioritized.map(({ topic, index }) => {
-    const point = mapTopicPosition(topic);
-    const fontSize = buildTopicFontSize(topic, scale);
-    const bounds = placeTopicBounds(topic, point, fontSize, placedBounds);
-    placedBounds.push(bounds);
+    if (value > 0) {
+      subKeywords.forEach((kw, rank) => {
+        words.push({
+          text: kw,
+          weight: share * Math.pow(0.7, rank + 1),
+          topicKey,
+          color,
+          isCategory: false,
+          rotated: seededRandom() < WORD_LAYOUT.rotateChance,
+          isMuted: false,
+          topic,
+        });
+      });
+    }
+  }
 
-    return {
-      topic,
-      index,
-      fontSize,
-      x: bounds.cx,
-      y: bounds.cy,
-      isMuted: (Number(topic.value) || 0) === 0,
-    };
-  });
-
-  return layouts.sort((left, right) => left.index - right.index);
+  words.sort((a, b) => b.weight - a.weight);
+  return words;
 }
 
-function buildWordNode(layout, sideKey) {
-  const node = createSvgElement("text");
-  const { topic, fontSize, x, y, isMuted } = layout;
-  const state = topic.state ?? "stable";
+function createSeededRandom(seed) {
+  let s = seed;
+  return () => {
+    s = (s * 16807 + 0) % 2147483647;
+    return s / 2147483647;
+  };
+}
 
-  node.setAttribute("class", `cloud-word side-${sideKey} state-${state}`);
+function buildSpiralLayouts(wordList) {
+  if (!wordList.length) return [];
+
+  const maxWeight = Math.max(...wordList.map((w) => w.weight), 0.001);
+  const placedBounds = [];
+  const layouts = [];
+
+  for (const word of wordList) {
+    const fontSize = wordToFontSize(word, maxWeight);
+    const textWidth = estimateTopicWidth(word.text, fontSize);
+    const textHeight = fontSize * 1.4;
+    const bboxW = word.rotated ? textHeight : textWidth;
+    const bboxH = word.rotated ? textWidth : textHeight;
+
+    const result = spiralPlace(bboxW, bboxH, placedBounds);
+    if (!result) continue;
+
+    placedBounds.push(result);
+
+    layouts.push({
+      word,
+      fontSize,
+      x: result.cx,
+      y: result.cy,
+      rotated: word.rotated,
+    });
+  }
+
+  return layouts;
+}
+
+function wordToFontSize(word, maxWeight) {
+  if (word.isMuted) return WORD_LAYOUT.sizeMin;
+  const ratio = word.weight / maxWeight;
+  const span = WORD_LAYOUT.sizeMax - WORD_LAYOUT.sizeMin;
+  return Math.round(WORD_LAYOUT.sizeMin + Math.pow(ratio, 0.6) * span);
+}
+
+function spiralPlace(width, height, placedBounds) {
+  for (let i = 0; i < WORD_LAYOUT.maxIterations; i++) {
+    const theta = i * WORD_LAYOUT.spiralStep;
+    const r = WORD_LAYOUT.spiralGrowth * theta;
+    const cx = CLOUD_LAYOUT.centerX + r * Math.cos(theta);
+    const cy = CLOUD_LAYOUT.centerY + r * Math.sin(theta);
+
+    const candidate = clampTopicBounds({ cx, cy, width, height });
+    const overlap = computeOverlapArea(candidate, placedBounds);
+
+    if (overlap === 0) {
+      return candidate;
+    }
+  }
+
+  return null;
+}
+
+function buildWordNode(layout) {
+  const { word, fontSize, x, y, rotated } = layout;
+  const node = createSvgElement("text");
+
+  node.setAttribute("class", "cloud-word");
   node.setAttribute("x", String(x));
   node.setAttribute("y", String(y));
   node.setAttribute("font-size", String(fontSize));
-  node.textContent = topic.text ?? "未命名主题";
+  node.setAttribute("fill", word.color);
+  node.textContent = word.text;
 
-  if (isMuted) {
+  if (rotated) {
+    node.setAttribute("transform", `rotate(90, ${x}, ${y})`);
+  }
+
+  if (word.isMuted) {
     node.classList.add("is-muted");
   }
 
   const tooltip = createSvgElement("title");
-  tooltip.textContent = `${topic.text}\n数量：${formatNumber(topic.value)}\n占比：${formatPercent(topic.share)}\n状态：${STATE_LABELS[state] ?? "稳定"}`;
+  const topicData = word.topic;
+  if (word.isCategory) {
+    tooltip.textContent = `${word.text}\n数量：${formatNumber(topicData.value)}\n占比：${formatPercent(topicData.share)}\n状态：${STATE_LABELS[topicData.state] ?? "稳定"}`;
+  } else {
+    tooltip.textContent = `${word.text}\n所属：${topicData.text}`;
+  }
   node.append(tooltip);
 
   return node;
-}
-
-function placeTopicBounds(topic, point, fontSize, placedBounds) {
-  const width = estimateTopicWidth(topic.text ?? "", fontSize);
-  const height = Math.max(fontSize * 1.2, WORD_LAYOUT.sizeMin + 2);
-  const baseBounds = clampTopicBounds({ cx: point.x, cy: point.y, width, height });
-
-  let fallback = {
-    bounds: baseBounds,
-    overlapArea: computeOverlapArea(baseBounds, placedBounds),
-  };
-
-  if (fallback.overlapArea === 0) {
-    return fallback.bounds;
-  }
-
-  for (const [offsetX, offsetY] of WORD_LAYOUT.candidateOffsets) {
-    const candidate = clampTopicBounds({
-      cx: point.x + offsetX,
-      cy: point.y + offsetY,
-      width,
-      height,
-    });
-    const overlapArea = computeOverlapArea(candidate, placedBounds);
-
-    if (overlapArea === 0) {
-      return candidate;
-    }
-
-    if (overlapArea < fallback.overlapArea) {
-      fallback = { bounds: candidate, overlapArea };
-    }
-  }
-
-  return fallback.bounds;
 }
 
 function computeOverlapArea(candidate, placedBounds) {
@@ -391,53 +409,16 @@ function clampTopicBounds(rect) {
 
 function estimateTopicWidth(text, fontSize) {
   const widthUnits = Array.from(String(text)).reduce((total, char) => {
-    return total + (/^[\u0000-\u00ff]$/.test(char) ? 0.56 : 0.96);
+    return total + (/^[\u0000-\u00ff]$/.test(char) ? 0.6 : 1.05);
   }, 0);
-  return Math.max(58, widthUnits * fontSize + 8);
-}
-
-function mapTopicPosition(topic) {
-  return {
-    x: CLOUD_LAYOUT.centerX + (Number(topic.x) || 0) * CLOUD_LAYOUT.scaleX,
-    y: CLOUD_LAYOUT.centerY + (Number(topic.y) || 0) * CLOUD_LAYOUT.scaleY,
-  };
-}
-
-function buildTopicFontSize(topic, scale) {
-  if ((Number(topic.value) || 0) === 0) {
-    return WORD_LAYOUT.sizeForZero;
-  }
-
-  const valueRatio = (Number(topic.value) || 0) / scale.maxValue;
-  const shareRatio = (Number(topic.share) || 0) / scale.maxShare;
-  const emphasis = Math.max(valueRatio * 0.48 + shareRatio * 0.52, 0);
-  const span = WORD_LAYOUT.sizeMax - WORD_LAYOUT.sizeMin;
-  return Math.round(WORD_LAYOUT.sizeMin + emphasis * span);
+  return Math.max(30, widthUnits * fontSize + 10);
 }
 
 function createSvgElement(tagName) {
   return document.createElementNS("http://www.w3.org/2000/svg", tagName);
 }
 
-function buildSubtitle(segmentLabel, sharedTop) {
-  if (!sharedTop.length) {
-    return `${segmentLabel} 阶段已载入，可继续查看两侧主题统计与后续词云容器。`;
-  }
-
-  return `${segmentLabel} 阶段中，${sharedTop[0].text} 是双方最接近的共同焦点，可在下方对比样本规模与高频主题。`;
-}
-
-function buildSummary(segmentLabel, academyTop, websiteTop, sharedTop) {
-  const academyText = academyTop?.text ?? "学院侧暂无主导主题";
-  const websiteText = websiteTop?.text ?? "网站侧暂无主导主题";
-  const sharedText = sharedTop?.text ?? "共同主题尚未形成";
-  return `${segmentLabel} 阶段里，学院侧以“${academyText}”最突出，网站侧则更偏向“${websiteText}”，双方最有可比性的交集主题为“${sharedText}”。`;
-}
-
 function renderError(message) {
-  elements.currentSegment.textContent = "加载失败";
-  elements.pageSubtitle.textContent = message;
-  renderCloudPanels(null);
   const errorBlock = document.createElement("div");
   errorBlock.className = "empty-state";
   errorBlock.textContent = `数据读取失败：${message}`;

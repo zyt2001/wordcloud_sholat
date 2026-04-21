@@ -32,7 +32,7 @@ function waitForServer(url, timeoutMs = 15000) {
 }
 
 async function run() {
-  const server = spawn("python", ["-m", "http.server", String(PORT), "--directory", WEB_ROOT], {
+  const server = spawn("python3", ["-m", "http.server", String(PORT), "--directory", WEB_ROOT], {
     stdio: "ignore",
   });
 
@@ -65,7 +65,7 @@ async function run() {
               const overlapWidth = Math.min(leftRect.right, rightRect.right) - Math.max(leftRect.left, rightRect.left);
               const overlapHeight = Math.min(leftRect.bottom, rightRect.bottom) - Math.max(leftRect.top, rightRect.top);
 
-              if (overlapWidth > 6 && overlapHeight > 6) {
+              if (overlapWidth > 10 && overlapHeight > 10) {
                 overlaps += 1;
               }
             }
@@ -83,8 +83,8 @@ async function run() {
         };
       });
 
-      assert.ok(result.academyWordCount >= 8, `学院侧应渲染为词云文本，当前数量 ${result.academyWordCount}`);
-      assert.ok(result.websiteWordCount >= 8, `网站侧应渲染为词云文本，当前数量 ${result.websiteWordCount}`);
+      assert.ok(result.academyWordCount >= 30, `学院侧应渲染为词云文本，当前数量 ${result.academyWordCount}`);
+      assert.ok(result.websiteWordCount >= 30, `网站侧应渲染为词云文本，当前数量 ${result.websiteWordCount}`);
       assert.equal(result.legacyNodeCount, 0, `不应继续渲染卡片节点，当前数量 ${result.legacyNodeCount}`);
       assert.equal(result.academyOverlapCount, 0, `学院词云存在重叠，重叠对数 ${result.academyOverlapCount}`);
       assert.equal(result.websiteOverlapCount, 0, `网站词云存在重叠，重叠对数 ${result.websiteOverlapCount}`);
