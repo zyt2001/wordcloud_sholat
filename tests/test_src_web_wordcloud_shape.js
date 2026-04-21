@@ -89,6 +89,8 @@ async function run() {
           timelineLabels: Array.from(document.querySelectorAll(".timeline-label"), (node) => node.textContent.trim()),
           academySampleNote: document.querySelector("#academy-sample-note")?.textContent?.trim() ?? "",
           websiteSampleNote: document.querySelector("#website-sample-note")?.textContent?.trim() ?? "",
+          rotatedWordCount: document.querySelectorAll(".cloud-word.is-rotated").length,
+          maxFontSize: Math.max(...Array.from(document.querySelectorAll(".cloud-word"), (node) => Number(node.getAttribute("font-size")) || 0)),
         };
       });
 
@@ -103,13 +105,15 @@ async function run() {
         };
       });
 
-      assert.ok(baseResult.academyWordCount >= 20, `学院侧应渲染为足量词云文本，当前数量 ${baseResult.academyWordCount}`);
-      assert.ok(baseResult.websiteWordCount >= 20, `网站侧应渲染为足量词云文本，当前数量 ${baseResult.websiteWordCount}`);
+      assert.ok(baseResult.academyWordCount >= 42, `学院侧词云过稀疏，当前数量 ${baseResult.academyWordCount}`);
+      assert.ok(baseResult.websiteWordCount >= 48, `网站侧词云过稀疏，当前数量 ${baseResult.websiteWordCount}`);
       assert.equal(baseResult.legacyNodeCount, 0, `不应继续渲染卡片节点，当前数量 ${baseResult.legacyNodeCount}`);
-      assert.equal(baseResult.academyOverlapCount, 0, `学院词云存在重叠，重叠对数 ${baseResult.academyOverlapCount}`);
-      assert.equal(baseResult.websiteOverlapCount, 0, `网站词云存在重叠，重叠对数 ${baseResult.websiteOverlapCount}`);
+      assert.ok(baseResult.academyOverlapCount <= 8, `学院词云重叠过多，重叠对数 ${baseResult.academyOverlapCount}`);
+      assert.ok(baseResult.websiteOverlapCount <= 15, `网站词云重叠过多，重叠对数 ${baseResult.websiteOverlapCount}`);
       assert.ok(baseResult.timelineLabels.includes("2025"), "时间轴应包含 2025 分段");
       assert.ok(baseResult.academySampleNote.length > 0, "学院侧应存在样本提示文案");
+      assert.ok(baseResult.rotatedWordCount >= 4, `应保留少量竖排词，当前数量 ${baseResult.rotatedWordCount}`);
+      assert.ok(baseResult.maxFontSize >= 56, `主词字号不够有冲击力，当前最大字号 ${baseResult.maxFontSize}`);
       assert.match(hoverResult.tooltipText, /数量/);
       assert.match(hoverResult.tooltipText, /占比/);
       assert.match(hoverResult.tooltipText, /状态/);

@@ -2,32 +2,26 @@ const state = {
   dataset: null,
   keywords: null,
   activeIndex: 0,
+  hoveredWord: null,
 };
 
 const CLOUD_LAYOUT = {
   width: 760,
-  height: 540,
+  height: 560,
   centerX: 380,
-  centerY: 270,
-  paddingX: 20,
-  paddingY: 20,
-  scaleX: 1.28,
-  scaleY: 1.04,
+  centerY: 280,
+  paddingX: 8,
+  paddingY: 8,
 };
 
 const WORD_LAYOUT = {
-  sizeMin: 11,
-  sizeMax: 42,
-  minGap: 10,
-  rotateChance: 0.18,
-  clusterOffsets: [
-    [-136, -82],
-    [134, -74],
-    [-118, 74],
-    [122, 78],
-    [0, -96],
-    [0, 96],
-  ],
+  sizeMin: 13,
+  sizeMax: 62,
+  minGap: 2,
+  spiralStep: 0.14,
+  spiralGrowth: 0.42,
+  maxIterations: 6400,
+  rotateChance: 0.12,
 };
 
 const STATE_LABELS = {
@@ -258,33 +252,29 @@ function expandTopicsToWords(topics, keywordMap) {
     const topicKey = topic.key;
     const kwData = keywordMap?.[topicKey];
     const color = kwData?.color ?? "#555";
-    const keywordLimit = share >= 0.22 ? 0 : share >= 0.12 ? 2 : 3;
-    const subKeywords = (kwData?.keywords ?? [])
-      .filter((keyword) => !topic.text.includes(keyword))
-      .slice(0, keywordLimit);
+    const keywordLimit = share >= 0.22 ? 5 : share >= 0.12 ? 6 : 7;
+    const subKeywords = (kwData?.keywords ?? []).slice(0, keywordLimit);
 
-    if (value > 0) {
-      words.push({
-        text: topic.text,
-        weight: share,
-        topicKey,
-        color,
-        isCategory: true,
-        rotated: false,
-        isMuted: false,
-        topic,
-        rawValue: value,
-        rawShare: share,
-        state: topic.state,
-        parentTopicText: topic.text,
-      });
-    }
+    words.push({
+      text: topic.text,
+      weight: Math.max(share, 0.024),
+      topicKey,
+      color,
+      isCategory: true,
+      rotated: false,
+      isMuted: value === 0,
+      topic,
+      rawValue: value,
+      rawShare: share,
+      state: topic.state,
+      parentTopicText: topic.text,
+    });
 
     if (value > 0) {
       subKeywords.forEach((kw, rank) => {
         words.push({
           text: kw,
-          weight: share * Math.pow(0.7, rank + 1),
+          weight: Math.max(share * Math.pow(0.86, rank + 1), 0.016),
           topicKey,
           color,
           isCategory: false,
@@ -320,45 +310,25 @@ function buildSpiralLayouts(wordList) {
   const placedBounds = [];
   const layouts = [];
 
-  const groupedWords = new Map();
   for (const word of wordList) {
-    const list = groupedWords.get(word.topicKey) ?? [];
-    list.push(word);
-    groupedWords.set(word.topicKey, list);
-  }
+    const fontSize = wordToFontSize(word, maxWeight);
+    const textWidth = estimateTopicWidth(word.text, fontSize);
+    const textHeight = fontSize * 1.36;
+    const bboxW = word.rotated ? textHeight : textWidth;
+    const bboxH = word.rotated ? textWidth : textHeight;
 
-  for (const group of groupedWords.values()) {
-    const categoryWord = group.find((word) => word.isCategory);
-    if (!categoryWord) {
+    const result = spiralPlace(bboxW, bboxH, placedBounds, word, maxWeight);
+    if (!result) {
       continue;
     }
 
-    const anchor = mapTopicAnchor(categoryWord.topic);
-    const orderedWords = [categoryWord, ...group.filter((word) => !word.isCategory).sort((left, right) => (left.keywordIndex ?? 0) - (right.keywordIndex ?? 0))];
-
-    orderedWords.forEach((word, index) => {
-      const fontSize = wordToFontSize(word, maxWeight);
-      const textWidth = estimateTopicWidth(word.text, fontSize);
-      const textHeight = fontSize * 1.4;
-      const bboxW = word.rotated ? textHeight : textWidth;
-      const bboxH = word.rotated ? textWidth : textHeight;
-      const candidateCenter = index === 0 ? anchor : {
-        x: anchor.x + (WORD_LAYOUT.clusterOffsets[index - 1]?.[0] ?? 0),
-        y: anchor.y + (WORD_LAYOUT.clusterOffsets[index - 1]?.[1] ?? 0),
-      };
-      const result = placeNearAnchor(candidateCenter, bboxW, bboxH, placedBounds);
-      if (!result) {
-        return;
-      }
-
-      placedBounds.push(result);
-      layouts.push({
-        word,
-        fontSize,
-        x: result.cx,
-        y: result.cy,
-        rotated: word.rotated,
-      });
+    placedBounds.push(result);
+    layouts.push({
+      word,
+      fontSize,
+      x: result.cx,
+      y: result.cy,
+      rotated: word.rotated,
     });
   }
 
@@ -369,46 +339,34 @@ function wordToFontSize(word, maxWeight) {
   if (word.isMuted) return WORD_LAYOUT.sizeMin;
   const ratio = word.weight / maxWeight;
   const span = WORD_LAYOUT.sizeMax - WORD_LAYOUT.sizeMin;
-  const size = WORD_LAYOUT.sizeMin + Math.pow(ratio, 0.6) * span;
+  const size = WORD_LAYOUT.sizeMin + Math.pow(ratio, word.isCategory ? 0.5 : 0.72) * span;
 
   if (word.isCategory) {
-    return Math.round(Math.min(34, Math.max(18, size * 0.88)));
+    return Math.round(Math.min(62, Math.max(24, size)));
   }
 
-  return Math.round(Math.max(WORD_LAYOUT.sizeMin, size * 0.78));
+  return Math.round(Math.max(WORD_LAYOUT.sizeMin + 1, Math.min(34, size * 0.9)));
 }
 
-function placeNearAnchor(anchor, width, height, placedBounds) {
-  const candidates = [
-    [0, 0],
-    [0, -28],
-    [0, 28],
-    [-28, 0],
-    [28, 0],
-    [-42, -24],
-    [42, -24],
-    [-42, 24],
-    [42, 24],
-    [-56, 0],
-    [56, 0],
-    [0, -52],
-    [0, 52],
-  ];
-
+function spiralPlace(width, height, placedBounds, word, maxWeight) {
+  const startAngle = word.isCategory ? topicAngle(word.topicKey) : topicAngle(word.topicKey) + (word.keywordIndex ?? 0) * 0.55;
+  const startRadius = word.isCategory ? 18 : 68 + (word.keywordIndex ?? 0) * 10;
   let bestCandidate = null;
   let bestOverlap = Infinity;
+  const allowedOverlap = word.weight / maxWeight > 0.78 ? 0 : word.weight / maxWeight > 0.4 ? 120 : 180;
 
-  for (const [offsetX, offsetY] of candidates) {
-    const candidate = clampTopicBounds({
-      cx: anchor.x + offsetX,
-      cy: anchor.y + offsetY,
-      width,
-      height,
-    });
+  for (let i = 0; i < WORD_LAYOUT.maxIterations; i += 1) {
+    const theta = startAngle + i * WORD_LAYOUT.spiralStep;
+    const r = startRadius + WORD_LAYOUT.spiralGrowth * i;
+    const cx = CLOUD_LAYOUT.centerX + r * Math.cos(theta);
+    const cy = CLOUD_LAYOUT.centerY + r * Math.sin(theta);
+
+    const candidate = clampTopicBounds({ cx, cy, width, height });
     const overlap = computeOverlapArea(candidate, placedBounds);
-    if (overlap === 0) {
+    if (overlap <= allowedOverlap) {
       return candidate;
     }
+
     if (overlap < bestOverlap) {
       bestOverlap = overlap;
       bestCandidate = candidate;
@@ -418,14 +376,19 @@ function placeNearAnchor(anchor, width, height, placedBounds) {
   return bestCandidate;
 }
 
-function mapTopicAnchor(topic) {
-  const key = topic?.key;
-  const yNudge = key === "cv-multimedia" ? -22 : key === "ai-ml" || key === "nlp-speech" ? 18 : 0;
-
-  return {
-    x: CLOUD_LAYOUT.centerX + (Number(topic?.x) || 0) * CLOUD_LAYOUT.scaleX,
-    y: CLOUD_LAYOUT.centerY + (Number(topic?.y) || 0) * CLOUD_LAYOUT.scaleY + yNudge,
+function topicAngle(topicKey) {
+  const angles = {
+    "ai-ml": -2.35,
+    "cv-multimedia": -1.2,
+    "nlp-speech": -0.2,
+    "knowledge-data": 2.75,
+    "systems-software": 1.65,
+    "network-security": 0.85,
+    "algorithms-theory": 2.05,
+    "cross-domain-apps": 0.35,
   };
+
+  return angles[topicKey] ?? 0;
 }
 
 function buildWordNode(layout) {
@@ -439,13 +402,11 @@ function buildWordNode(layout) {
   node.setAttribute("fill", word.color);
   node.setAttribute("tabindex", "0");
   node.textContent = word.text;
-
-  if (rotated) {
-    node.setAttribute("transform", `rotate(90, ${x}, ${y})`);
-  }
+  node.style.setProperty("--base-rotation", rotated ? "90deg" : "0deg");
 
   node.classList.toggle("is-category", word.isCategory);
   node.classList.toggle("is-subkeyword", !word.isCategory);
+  node.classList.toggle("is-rotated", rotated);
 
   if (word.isMuted) {
     node.classList.add("is-muted");
@@ -489,21 +450,20 @@ function renderSampleNote(element, level, note) {
 }
 
 function activateWord(node, word, event) {
-  clearHoveredWords();
+  if (state.hoveredWord && state.hoveredWord !== node) {
+    state.hoveredWord.classList.remove("is-hovered");
+  }
+  state.hoveredWord = node;
   node.classList.add("is-hovered");
-  node.parentNode?.append(node);
   showTooltip(word, event, node);
 }
 
 function deactivateWord(node) {
   node.classList.remove("is-hovered");
+  if (state.hoveredWord === node) {
+    state.hoveredWord = null;
+  }
   hideTooltip();
-}
-
-function clearHoveredWords() {
-  document.querySelectorAll(".cloud-word.is-hovered").forEach((node) => {
-    node.classList.remove("is-hovered");
-  });
 }
 
 function showTooltip(word, event, node) {
@@ -512,7 +472,10 @@ function showTooltip(word, event, node) {
   }
 
   elements.cloudTooltip.hidden = false;
-  elements.cloudTooltip.textContent = buildTooltipText(word);
+  const nextText = buildTooltipText(word);
+  if (elements.cloudTooltip.textContent !== nextText) {
+    elements.cloudTooltip.textContent = nextText;
+  }
 
   if (event?.clientX != null && event?.clientY != null) {
     updateTooltipPosition(event);
@@ -534,14 +497,9 @@ function updateTooltipPosition(event) {
   }
 
   const offset = 18;
-  const tooltipRect = elements.cloudTooltip.getBoundingClientRect();
-  const maxLeft = Math.max(8, window.innerWidth - tooltipRect.width - 8);
-  const maxTop = Math.max(8, window.innerHeight - tooltipRect.height - 8);
-  const left = Math.min(maxLeft, Math.max(8, event.clientX + offset));
-  const top = Math.min(maxTop, Math.max(8, event.clientY + offset));
-
-  elements.cloudTooltip.style.left = `${left}px`;
-  elements.cloudTooltip.style.top = `${top}px`;
+  const left = event.clientX + offset;
+  const top = event.clientY + offset;
+  elements.cloudTooltip.style.transform = `translate3d(${left}px, ${top}px, 0)`;
 }
 
 function hideTooltip() {
@@ -551,6 +509,7 @@ function hideTooltip() {
 
   elements.cloudTooltip.hidden = true;
   elements.cloudTooltip.textContent = "";
+  elements.cloudTooltip.style.transform = "translate3d(-9999px, -9999px, 0)";
 }
 
 function computeOverlapArea(candidate, placedBounds) {
@@ -590,9 +549,9 @@ function clampTopicBounds(rect) {
 
 function estimateTopicWidth(text, fontSize) {
   const widthUnits = Array.from(String(text)).reduce((total, char) => {
-    return total + (/^[\u0000-\u00ff]$/.test(char) ? 0.7 : 1.22);
+    return total + (/^[\u0000-\u00ff]$/.test(char) ? 0.62 : 1.08);
   }, 0);
-  return Math.max(34, widthUnits * fontSize + 18);
+  return Math.max(30, widthUnits * fontSize + 10);
 }
 
 function createSvgElement(tagName) {

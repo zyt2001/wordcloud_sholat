@@ -152,7 +152,7 @@ h1 {
   position: relative;
   display: flex;
   align-items: stretch;
-  aspect-ratio: 76 / 54;
+  aspect-ratio: 76 / 56;
   border-radius: 18px;
   border: 1px solid rgba(111, 127, 107, 0.18);
   background: #f8f4ec;
@@ -169,35 +169,42 @@ h1 {
 .cloud-word {
   text-anchor: middle;
   dominant-baseline: middle;
-  font-weight: 520;
-  letter-spacing: -0.01em;
+  font-weight: 560;
+  letter-spacing: -0.015em;
   paint-order: stroke;
-  stroke: rgba(249, 248, 244, 0.9);
-  stroke-width: 1.1px;
+  stroke: rgba(249, 248, 244, 0.94);
+  stroke-width: 1px;
   transform-box: fill-box;
   transform-origin: center;
-  transition: opacity 160ms ease, transform 180ms ease, filter 180ms ease;
+  transform: rotate(var(--base-rotation, 0deg)) scale(1);
+  will-change: transform, filter;
+  transition: opacity 110ms ease, transform 110ms ease, filter 110ms ease;
 }
 
 .cloud-word.is-category {
-  font-weight: 720;
-  stroke-width: 1.6px;
+  font-weight: 760;
+  stroke-width: 1.45px;
+  opacity: 0.98;
 }
 
 .cloud-word.is-subkeyword {
-  opacity: 0.9;
+  opacity: 0.82;
+}
+
+.cloud-word.is-rotated {
+  letter-spacing: -0.02em;
 }
 
 .cloud-word.is-muted {
-  opacity: 0.34;
+  opacity: 0.24;
 }
 
 .cloud-word.is-hovered,
 .cloud-word:hover,
 .cloud-word:focus-visible {
   opacity: 1;
-  filter: saturate(1.12) brightness(1.08) drop-shadow(0 6px 10px rgba(83, 73, 56, 0.16));
-  transform: scale(1.18);
+  filter: saturate(1.08) brightness(1.04) drop-shadow(0 4px 8px rgba(83, 73, 56, 0.1));
+  transform: rotate(var(--base-rotation, 0deg)) scale(1.08);
   outline: none;
 }
 
@@ -215,6 +222,8 @@ h1 {
   line-height: 1.65;
   white-space: pre-line;
   pointer-events: none;
+  transform: translate3d(-9999px, -9999px, 0);
+  will-change: transform;
 }
 
 .list-title {
