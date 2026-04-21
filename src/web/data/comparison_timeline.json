@@ -1,5 +1,5 @@
 {
-  "range": "2005-2024",
+  "range": "2005-2025",
   "segments": [
     {
       "label": "2005-2011",
@@ -236,7 +236,11 @@
         "academyClassifiedCount": 30,
         "websiteClassifiedCount": 24926,
         "academyOtherCount": 0,
-        "websiteOtherCount": 260
+        "websiteOtherCount": 260,
+        "academySampleWarningLevel": "caution",
+        "websiteSampleWarningLevel": "none",
+        "academySampleNote": "当前阶段样本相对较少，适合观察方向，不宜做强结论。",
+        "websiteSampleNote": ""
       }
     },
     {
@@ -474,7 +478,11 @@
         "academyClassifiedCount": 81,
         "websiteClassifiedCount": 69156,
         "academyOtherCount": 1,
-        "websiteOtherCount": 502
+        "websiteOtherCount": 502,
+        "academySampleWarningLevel": "caution",
+        "websiteSampleWarningLevel": "none",
+        "academySampleNote": "当前阶段样本相对较少，适合观察方向，不宜做强结论。",
+        "websiteSampleNote": ""
       }
     },
     {
@@ -712,7 +720,11 @@
         "academyClassifiedCount": 254,
         "websiteClassifiedCount": 99742,
         "academyOtherCount": 0,
-        "websiteOtherCount": 341
+        "websiteOtherCount": 341,
+        "academySampleWarningLevel": "none",
+        "websiteSampleWarningLevel": "none",
+        "academySampleNote": "",
+        "websiteSampleNote": ""
       }
     },
     {
@@ -950,7 +962,11 @@
         "academyClassifiedCount": 390,
         "websiteClassifiedCount": 110973,
         "academyOtherCount": 0,
-        "websiteOtherCount": 129
+        "websiteOtherCount": 129,
+        "academySampleWarningLevel": "none",
+        "websiteSampleWarningLevel": "none",
+        "academySampleNote": "",
+        "websiteSampleNote": ""
       }
     },
     {
@@ -1188,7 +1204,11 @@
         "academyClassifiedCount": 600,
         "websiteClassifiedCount": 142048,
         "academyOtherCount": 0,
-        "websiteOtherCount": 150
+        "websiteOtherCount": 150,
+        "academySampleWarningLevel": "none",
+        "websiteSampleWarningLevel": "none",
+        "academySampleNote": "",
+        "websiteSampleNote": ""
       }
     },
     {
@@ -1426,7 +1446,253 @@
         "academyClassifiedCount": 520,
         "websiteClassifiedCount": 112187,
         "academyOtherCount": 0,
-        "websiteOtherCount": 78
+        "websiteOtherCount": 78,
+        "academySampleWarningLevel": "none",
+        "websiteSampleWarningLevel": "none",
+        "academySampleNote": "",
+        "websiteSampleNote": ""
+      }
+    },
+    {
+      "label": "2025",
+      "academy": {
+        "name": "模拟学院用户",
+        "sampleCount": 195,
+        "otherCount": 0,
+        "topics": [
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "value": 52,
+            "share": 0.2667,
+            "state": "fall",
+            "x": -280,
+            "y": -170
+          },
+          {
+            "key": "cv-multimedia",
+            "text": "计算机视觉与多媒体",
+            "value": 73,
+            "share": 0.3744,
+            "state": "fall",
+            "x": 0,
+            "y": -170
+          },
+          {
+            "key": "nlp-speech",
+            "text": "自然语言与语音",
+            "value": 38,
+            "share": 0.1949,
+            "state": "fall",
+            "x": 280,
+            "y": -170
+          },
+          {
+            "key": "knowledge-data",
+            "text": "知识计算与数据智能",
+            "value": 8,
+            "share": 0.041,
+            "state": "fall",
+            "x": -280,
+            "y": 0
+          },
+          {
+            "key": "systems-software",
+            "text": "系统、软件与体系结构",
+            "value": 6,
+            "share": 0.0308,
+            "state": "fall",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "key": "network-security",
+            "text": "网络、通信与安全",
+            "value": 8,
+            "share": 0.041,
+            "state": "fall",
+            "x": 280,
+            "y": 0
+          },
+          {
+            "key": "algorithms-theory",
+            "text": "算法理论与形式化",
+            "value": 0,
+            "share": 0.0,
+            "state": "fall",
+            "x": -140,
+            "y": 170
+          },
+          {
+            "key": "cross-domain-apps",
+            "text": "交叉应用与智能场景",
+            "value": 10,
+            "share": 0.0513,
+            "state": "fall",
+            "x": 140,
+            "y": 170
+          }
+        ]
+      },
+      "website": {
+        "name": "模拟网站用户",
+        "sampleCount": 41994,
+        "otherCount": 30,
+        "topics": [
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "value": 13336,
+            "share": 0.3176,
+            "state": "fall",
+            "x": -280,
+            "y": -170
+          },
+          {
+            "key": "cv-multimedia",
+            "text": "计算机视觉与多媒体",
+            "value": 9555,
+            "share": 0.2275,
+            "state": "fall",
+            "x": 0,
+            "y": -170
+          },
+          {
+            "key": "nlp-speech",
+            "text": "自然语言与语音",
+            "value": 6557,
+            "share": 0.1561,
+            "state": "fall",
+            "x": 280,
+            "y": -170
+          },
+          {
+            "key": "knowledge-data",
+            "text": "知识计算与数据智能",
+            "value": 3466,
+            "share": 0.0825,
+            "state": "fall",
+            "x": -280,
+            "y": 0
+          },
+          {
+            "key": "systems-software",
+            "text": "系统、软件与体系结构",
+            "value": 1787,
+            "share": 0.0426,
+            "state": "fall",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "key": "network-security",
+            "text": "网络、通信与安全",
+            "value": 2621,
+            "share": 0.0624,
+            "state": "fall",
+            "x": 280,
+            "y": 0
+          },
+          {
+            "key": "algorithms-theory",
+            "text": "算法理论与形式化",
+            "value": 1667,
+            "share": 0.0397,
+            "state": "fall",
+            "x": -140,
+            "y": 170
+          },
+          {
+            "key": "cross-domain-apps",
+            "text": "交叉应用与智能场景",
+            "value": 2975,
+            "share": 0.0708,
+            "state": "fall",
+            "x": 140,
+            "y": 170
+          }
+        ]
+      },
+      "summary": {
+        "academyTop": [
+          {
+            "key": "cv-multimedia",
+            "text": "计算机视觉与多媒体",
+            "value": 73,
+            "share": 0.3744
+          },
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "value": 52,
+            "share": 0.2667
+          },
+          {
+            "key": "nlp-speech",
+            "text": "自然语言与语音",
+            "value": 38,
+            "share": 0.1949
+          }
+        ],
+        "websiteTop": [
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "value": 13336,
+            "share": 0.3176
+          },
+          {
+            "key": "cv-multimedia",
+            "text": "计算机视觉与多媒体",
+            "value": 9555,
+            "share": 0.2275
+          },
+          {
+            "key": "nlp-speech",
+            "text": "自然语言与语音",
+            "value": 6557,
+            "share": 0.1561
+          }
+        ],
+        "sharedTop": [
+          {
+            "key": "ai-ml",
+            "text": "人工智能与机器学习",
+            "academyValue": 52,
+            "websiteValue": 13336,
+            "academyShare": 0.2667,
+            "websiteShare": 0.3176,
+            "balanceScore": 0.2899
+          },
+          {
+            "key": "cv-multimedia",
+            "text": "计算机视觉与多媒体",
+            "academyValue": 73,
+            "websiteValue": 9555,
+            "academyShare": 0.3744,
+            "websiteShare": 0.2275,
+            "balanceScore": 0.283
+          },
+          {
+            "key": "nlp-speech",
+            "text": "自然语言与语音",
+            "academyValue": 38,
+            "websiteValue": 6557,
+            "academyShare": 0.1949,
+            "websiteShare": 0.1561,
+            "balanceScore": 0.1734
+          }
+        ],
+        "academySampleCount": 195,
+        "websiteSampleCount": 41994,
+        "academyClassifiedCount": 195,
+        "websiteClassifiedCount": 41964,
+        "academyOtherCount": 0,
+        "websiteOtherCount": 30,
+        "academySampleWarningLevel": "caution",
+        "websiteSampleWarningLevel": "none",
+        "academySampleNote": "当前阶段样本相对较少，适合观察方向，不宜做强结论。",
+        "websiteSampleNote": ""
       }
     }
   ]

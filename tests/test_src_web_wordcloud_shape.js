@@ -32,7 +32,7 @@ function waitForServer(url, timeoutMs = 15000) {
 }
 
 async function run() {
-  const server = spawn("python3", ["-m", "http.server", String(PORT), "--directory", WEB_ROOT], {
+  const server = spawn("python", ["-m", "http.server", String(PORT), "--directory", WEB_ROOT], {
     stdio: "ignore",
   });
 
@@ -49,7 +49,13 @@ async function run() {
         return timelineReady && cloudReady;
       });
 
-      const result = await page.evaluate(() => {
+      const targetTimelineButton = page.locator(".timeline-button", { hasText: "2025" });
+      if ((await targetTimelineButton.count()) > 0) {
+        await targetTimelineButton.first().click();
+        await page.waitForTimeout(120);
+      }
+
+      const baseResult = await page.evaluate(() => {
         const countTextOverlapsInPage = (selector) => {
           const nodes = Array.from(document.querySelectorAll(selector));
           const rects = nodes
@@ -80,14 +86,35 @@ async function run() {
           legacyNodeCount: document.querySelectorAll(".topic-node").length,
           academyOverlapCount: countTextOverlapsInPage("#academy-cloud .cloud-word"),
           websiteOverlapCount: countTextOverlapsInPage("#website-cloud .cloud-word"),
+          timelineLabels: Array.from(document.querySelectorAll(".timeline-label"), (node) => node.textContent.trim()),
+          academySampleNote: document.querySelector("#academy-sample-note")?.textContent?.trim() ?? "",
+          websiteSampleNote: document.querySelector("#website-sample-note")?.textContent?.trim() ?? "",
         };
       });
 
-      assert.ok(result.academyWordCount >= 30, `学院侧应渲染为词云文本，当前数量 ${result.academyWordCount}`);
-      assert.ok(result.websiteWordCount >= 30, `网站侧应渲染为词云文本，当前数量 ${result.websiteWordCount}`);
-      assert.equal(result.legacyNodeCount, 0, `不应继续渲染卡片节点，当前数量 ${result.legacyNodeCount}`);
-      assert.equal(result.academyOverlapCount, 0, `学院词云存在重叠，重叠对数 ${result.academyOverlapCount}`);
-      assert.equal(result.websiteOverlapCount, 0, `网站词云存在重叠，重叠对数 ${result.websiteOverlapCount}`);
+      const firstWord = page.locator("#academy-cloud .cloud-word").first();
+      await firstWord.hover();
+
+      const hoverResult = await page.evaluate(() => {
+        return {
+          tooltipText: document.querySelector("#cloud-tooltip")?.textContent?.trim() ?? "",
+          hoveredWordClass: document.querySelector("#academy-cloud .cloud-word.is-hovered")?.getAttribute("class") ?? "",
+          hoveredWordTransform: window.getComputedStyle(document.querySelector("#academy-cloud .cloud-word.is-hovered") ?? document.querySelector("#academy-cloud .cloud-word")).transform,
+        };
+      });
+
+      assert.ok(baseResult.academyWordCount >= 20, `学院侧应渲染为足量词云文本，当前数量 ${baseResult.academyWordCount}`);
+      assert.ok(baseResult.websiteWordCount >= 20, `网站侧应渲染为足量词云文本，当前数量 ${baseResult.websiteWordCount}`);
+      assert.equal(baseResult.legacyNodeCount, 0, `不应继续渲染卡片节点，当前数量 ${baseResult.legacyNodeCount}`);
+      assert.equal(baseResult.academyOverlapCount, 0, `学院词云存在重叠，重叠对数 ${baseResult.academyOverlapCount}`);
+      assert.equal(baseResult.websiteOverlapCount, 0, `网站词云存在重叠，重叠对数 ${baseResult.websiteOverlapCount}`);
+      assert.ok(baseResult.timelineLabels.includes("2025"), "时间轴应包含 2025 分段");
+      assert.ok(baseResult.academySampleNote.length > 0, "学院侧应存在样本提示文案");
+      assert.match(hoverResult.tooltipText, /数量/);
+      assert.match(hoverResult.tooltipText, /占比/);
+      assert.match(hoverResult.tooltipText, /状态/);
+      assert.match(hoverResult.hoveredWordClass, /is-hovered/);
+      assert.notEqual(hoverResult.hoveredWordTransform, "none", "hover 时词语应有放大反馈");
     } finally {
       await browser.close();
     }

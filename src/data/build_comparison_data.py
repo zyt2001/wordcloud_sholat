@@ -12,6 +12,7 @@ TARGET_SEGMENTS = [
     "2020-2021",
     "2022-2023",
     "2024",
+    "2025",
 ]
 
 SIDE_NAMES = {
@@ -26,6 +27,7 @@ SEGMENT_RULES = (
     (range(2020, 2022), "2020-2021"),
     (range(2022, 2024), "2022-2023"),
     (range(2024, 2025), "2024"),
+    (range(2025, 2026), "2025"),
 )
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -299,11 +301,23 @@ def build_shared_top_topics(academy_counts, website_counts, academy_total, websi
     )[:3]
 
 
+def build_sample_warning(sample_count, other_sample_count):
+    low_absolute = sample_count < 250
+    strong_gap = sample_count * 8 < max(other_sample_count, 1)
+
+    if low_absolute and strong_gap:
+        return "caution", "当前阶段样本相对较少，适合观察方向，不宜做强结论。"
+
+    return "none", ""
+
+
 def build_segment_summary(academy_payload, website_payload, segment):
     academy_counts = academy_payload["segmentTopicCounts"][segment]
     website_counts = website_payload["segmentTopicCounts"][segment]
     academy_total = academy_payload["segmentSampleCounts"][segment]
     website_total = website_payload["segmentSampleCounts"][segment]
+    academy_warning_level, academy_note = build_sample_warning(academy_total, website_total)
+    website_warning_level, website_note = build_sample_warning(website_total, academy_total)
 
     return {
         "academyTop": build_top_topics(academy_counts, academy_total),
@@ -315,6 +329,10 @@ def build_segment_summary(academy_payload, website_payload, segment):
         "websiteClassifiedCount": website_total - website_payload["segmentOtherCounts"][segment],
         "academyOtherCount": academy_payload["segmentOtherCounts"][segment],
         "websiteOtherCount": website_payload["segmentOtherCounts"][segment],
+        "academySampleWarningLevel": academy_warning_level,
+        "websiteSampleWarningLevel": website_warning_level,
+        "academySampleNote": academy_note,
+        "websiteSampleNote": website_note,
     }
 
 
@@ -342,7 +360,7 @@ def build_comparison_payload(academy_file_paths=None, website_file_paths=None):
         previous_website_counts = website_payload["segmentTopicCounts"][segment]
 
     return {
-        "range": "2005-2024",
+        "range": "2005-2025",
         "segments": segment_payloads,
     }
 

@@ -5,22 +5,29 @@ const state = {
 };
 
 const CLOUD_LAYOUT = {
-  width: 640,
-  height: 480,
-  centerX: 320,
-  centerY: 240,
-  paddingX: 16,
-  paddingY: 16,
+  width: 760,
+  height: 540,
+  centerX: 380,
+  centerY: 270,
+  paddingX: 20,
+  paddingY: 20,
+  scaleX: 1.28,
+  scaleY: 1.04,
 };
 
 const WORD_LAYOUT = {
   sizeMin: 11,
   sizeMax: 42,
-  minGap: 4,
-  spiralStep: 0.15,
-  spiralGrowth: 0.45,
-  maxIterations: 4000,
-  rotateChance: 0.3,
+  minGap: 10,
+  rotateChance: 0.18,
+  clusterOffsets: [
+    [-136, -82],
+    [134, -74],
+    [-118, 74],
+    [122, 78],
+    [0, -96],
+    [0, 96],
+  ],
 };
 
 const STATE_LABELS = {
@@ -33,6 +40,8 @@ const STATE_LABELS = {
 const elements = {
   academyTitle: document.querySelector("#academy-title"),
   websiteTitle: document.querySelector("#website-title"),
+  academySampleNote: document.querySelector("#academy-sample-note"),
+  websiteSampleNote: document.querySelector("#website-sample-note"),
   academyStats: document.querySelector("#academy-stats"),
   websiteStats: document.querySelector("#website-stats"),
   academyTopics: document.querySelector("#academy-topics"),
@@ -41,6 +50,7 @@ const elements = {
   websiteCloud: document.querySelector("#website-cloud"),
   timeline: document.querySelector("#timeline"),
   statTemplate: document.querySelector("#stat-template"),
+  cloudTooltip: document.querySelector("#cloud-tooltip"),
 };
 
 void initialize();
@@ -134,6 +144,8 @@ function renderActiveSegment() {
 
   elements.academyTitle.textContent = academy.name ?? "模拟学院用户";
   elements.websiteTitle.textContent = website.name ?? "模拟网站用户";
+  renderSampleNote(elements.academySampleNote, summary.academySampleWarningLevel, summary.academySampleNote);
+  renderSampleNote(elements.websiteSampleNote, summary.websiteSampleWarningLevel, summary.websiteSampleNote);
 
   renderCloudPanels(segment);
 
@@ -197,6 +209,8 @@ function renderCloudPanels(segment) {
   const academy = segment?.academy ?? null;
   const website = segment?.website ?? null;
 
+   hideTooltip();
+
   renderTopicCloud(elements.academyCloud, academy, segment?.label ?? "当前阶段");
   renderTopicCloud(elements.websiteCloud, website, segment?.label ?? "当前阶段");
 }
@@ -244,18 +258,27 @@ function expandTopicsToWords(topics, keywordMap) {
     const topicKey = topic.key;
     const kwData = keywordMap?.[topicKey];
     const color = kwData?.color ?? "#555";
-    const subKeywords = kwData?.keywords ?? [];
+    const keywordLimit = share >= 0.22 ? 0 : share >= 0.12 ? 2 : 3;
+    const subKeywords = (kwData?.keywords ?? [])
+      .filter((keyword) => !topic.text.includes(keyword))
+      .slice(0, keywordLimit);
 
-    words.push({
-      text: topic.text,
-      weight: share,
-      topicKey,
-      color,
-      isCategory: true,
-      rotated: false,
-      isMuted: value === 0,
-      topic,
-    });
+    if (value > 0) {
+      words.push({
+        text: topic.text,
+        weight: share,
+        topicKey,
+        color,
+        isCategory: true,
+        rotated: false,
+        isMuted: false,
+        topic,
+        rawValue: value,
+        rawShare: share,
+        state: topic.state,
+        parentTopicText: topic.text,
+      });
+    }
 
     if (value > 0) {
       subKeywords.forEach((kw, rank) => {
@@ -268,6 +291,11 @@ function expandTopicsToWords(topics, keywordMap) {
           rotated: seededRandom() < WORD_LAYOUT.rotateChance,
           isMuted: false,
           topic,
+          rawValue: value,
+          rawShare: share,
+          state: topic.state,
+          parentTopicText: topic.text,
+          keywordIndex: rank,
         });
       });
     }
@@ -292,24 +320,45 @@ function buildSpiralLayouts(wordList) {
   const placedBounds = [];
   const layouts = [];
 
+  const groupedWords = new Map();
   for (const word of wordList) {
-    const fontSize = wordToFontSize(word, maxWeight);
-    const textWidth = estimateTopicWidth(word.text, fontSize);
-    const textHeight = fontSize * 1.4;
-    const bboxW = word.rotated ? textHeight : textWidth;
-    const bboxH = word.rotated ? textWidth : textHeight;
+    const list = groupedWords.get(word.topicKey) ?? [];
+    list.push(word);
+    groupedWords.set(word.topicKey, list);
+  }
 
-    const result = spiralPlace(bboxW, bboxH, placedBounds);
-    if (!result) continue;
+  for (const group of groupedWords.values()) {
+    const categoryWord = group.find((word) => word.isCategory);
+    if (!categoryWord) {
+      continue;
+    }
 
-    placedBounds.push(result);
+    const anchor = mapTopicAnchor(categoryWord.topic);
+    const orderedWords = [categoryWord, ...group.filter((word) => !word.isCategory).sort((left, right) => (left.keywordIndex ?? 0) - (right.keywordIndex ?? 0))];
 
-    layouts.push({
-      word,
-      fontSize,
-      x: result.cx,
-      y: result.cy,
-      rotated: word.rotated,
+    orderedWords.forEach((word, index) => {
+      const fontSize = wordToFontSize(word, maxWeight);
+      const textWidth = estimateTopicWidth(word.text, fontSize);
+      const textHeight = fontSize * 1.4;
+      const bboxW = word.rotated ? textHeight : textWidth;
+      const bboxH = word.rotated ? textWidth : textHeight;
+      const candidateCenter = index === 0 ? anchor : {
+        x: anchor.x + (WORD_LAYOUT.clusterOffsets[index - 1]?.[0] ?? 0),
+        y: anchor.y + (WORD_LAYOUT.clusterOffsets[index - 1]?.[1] ?? 0),
+      };
+      const result = placeNearAnchor(candidateCenter, bboxW, bboxH, placedBounds);
+      if (!result) {
+        return;
+      }
+
+      placedBounds.push(result);
+      layouts.push({
+        word,
+        fontSize,
+        x: result.cx,
+        y: result.cy,
+        rotated: word.rotated,
+      });
     });
   }
 
@@ -320,25 +369,63 @@ function wordToFontSize(word, maxWeight) {
   if (word.isMuted) return WORD_LAYOUT.sizeMin;
   const ratio = word.weight / maxWeight;
   const span = WORD_LAYOUT.sizeMax - WORD_LAYOUT.sizeMin;
-  return Math.round(WORD_LAYOUT.sizeMin + Math.pow(ratio, 0.6) * span);
+  const size = WORD_LAYOUT.sizeMin + Math.pow(ratio, 0.6) * span;
+
+  if (word.isCategory) {
+    return Math.round(Math.min(34, Math.max(18, size * 0.88)));
+  }
+
+  return Math.round(Math.max(WORD_LAYOUT.sizeMin, size * 0.78));
 }
 
-function spiralPlace(width, height, placedBounds) {
-  for (let i = 0; i < WORD_LAYOUT.maxIterations; i++) {
-    const theta = i * WORD_LAYOUT.spiralStep;
-    const r = WORD_LAYOUT.spiralGrowth * theta;
-    const cx = CLOUD_LAYOUT.centerX + r * Math.cos(theta);
-    const cy = CLOUD_LAYOUT.centerY + r * Math.sin(theta);
+function placeNearAnchor(anchor, width, height, placedBounds) {
+  const candidates = [
+    [0, 0],
+    [0, -28],
+    [0, 28],
+    [-28, 0],
+    [28, 0],
+    [-42, -24],
+    [42, -24],
+    [-42, 24],
+    [42, 24],
+    [-56, 0],
+    [56, 0],
+    [0, -52],
+    [0, 52],
+  ];
 
-    const candidate = clampTopicBounds({ cx, cy, width, height });
+  let bestCandidate = null;
+  let bestOverlap = Infinity;
+
+  for (const [offsetX, offsetY] of candidates) {
+    const candidate = clampTopicBounds({
+      cx: anchor.x + offsetX,
+      cy: anchor.y + offsetY,
+      width,
+      height,
+    });
     const overlap = computeOverlapArea(candidate, placedBounds);
-
     if (overlap === 0) {
       return candidate;
     }
+    if (overlap < bestOverlap) {
+      bestOverlap = overlap;
+      bestCandidate = candidate;
+    }
   }
 
-  return null;
+  return bestCandidate;
+}
+
+function mapTopicAnchor(topic) {
+  const key = topic?.key;
+  const yNudge = key === "cv-multimedia" ? -22 : key === "ai-ml" || key === "nlp-speech" ? 18 : 0;
+
+  return {
+    x: CLOUD_LAYOUT.centerX + (Number(topic?.x) || 0) * CLOUD_LAYOUT.scaleX,
+    y: CLOUD_LAYOUT.centerY + (Number(topic?.y) || 0) * CLOUD_LAYOUT.scaleY + yNudge,
+  };
 }
 
 function buildWordNode(layout) {
@@ -350,26 +437,120 @@ function buildWordNode(layout) {
   node.setAttribute("y", String(y));
   node.setAttribute("font-size", String(fontSize));
   node.setAttribute("fill", word.color);
+  node.setAttribute("tabindex", "0");
   node.textContent = word.text;
 
   if (rotated) {
     node.setAttribute("transform", `rotate(90, ${x}, ${y})`);
   }
 
+  node.classList.toggle("is-category", word.isCategory);
+  node.classList.toggle("is-subkeyword", !word.isCategory);
+
   if (word.isMuted) {
     node.classList.add("is-muted");
   }
 
   const tooltip = createSvgElement("title");
-  const topicData = word.topic;
-  if (word.isCategory) {
-    tooltip.textContent = `${word.text}\n数量：${formatNumber(topicData.value)}\n占比：${formatPercent(topicData.share)}\n状态：${STATE_LABELS[topicData.state] ?? "稳定"}`;
-  } else {
-    tooltip.textContent = `${word.text}\n所属：${topicData.text}`;
-  }
+  tooltip.textContent = buildTooltipText(word);
   node.append(tooltip);
 
+  node.addEventListener("pointerenter", (event) => activateWord(node, word, event));
+  node.addEventListener("pointermove", updateTooltipPosition);
+  node.addEventListener("pointerleave", () => deactivateWord(node));
+  node.addEventListener("focus", (event) => activateWord(node, word, event));
+  node.addEventListener("blur", () => deactivateWord(node));
+
   return node;
+}
+
+function buildTooltipText(word) {
+  const lines = [word.text];
+
+  if (!word.isCategory) {
+    lines.push(`所属：${word.parentTopicText}`);
+  }
+
+  lines.push(`数量：${formatNumber(word.rawValue ?? 0)}`);
+  lines.push(`占比：${formatPercent(word.rawShare ?? 0)}`);
+  lines.push(`状态：${STATE_LABELS[word.state] ?? "稳定"}`);
+  return lines.join("\n");
+}
+
+function renderSampleNote(element, level, note) {
+  if (!element) {
+    return;
+  }
+
+  const visible = level === "caution" && Boolean(note);
+  element.hidden = !visible;
+  element.dataset.level = visible ? level : "none";
+  element.textContent = visible ? note : "";
+}
+
+function activateWord(node, word, event) {
+  clearHoveredWords();
+  node.classList.add("is-hovered");
+  node.parentNode?.append(node);
+  showTooltip(word, event, node);
+}
+
+function deactivateWord(node) {
+  node.classList.remove("is-hovered");
+  hideTooltip();
+}
+
+function clearHoveredWords() {
+  document.querySelectorAll(".cloud-word.is-hovered").forEach((node) => {
+    node.classList.remove("is-hovered");
+  });
+}
+
+function showTooltip(word, event, node) {
+  if (!elements.cloudTooltip) {
+    return;
+  }
+
+  elements.cloudTooltip.hidden = false;
+  elements.cloudTooltip.textContent = buildTooltipText(word);
+
+  if (event?.clientX != null && event?.clientY != null) {
+    updateTooltipPosition(event);
+    return;
+  }
+
+  if (node) {
+    const rect = node.getBoundingClientRect();
+    updateTooltipPosition({
+      clientX: rect.left + rect.width / 2,
+      clientY: rect.top + rect.height / 2,
+    });
+  }
+}
+
+function updateTooltipPosition(event) {
+  if (!elements.cloudTooltip || elements.cloudTooltip.hidden || !event) {
+    return;
+  }
+
+  const offset = 18;
+  const tooltipRect = elements.cloudTooltip.getBoundingClientRect();
+  const maxLeft = Math.max(8, window.innerWidth - tooltipRect.width - 8);
+  const maxTop = Math.max(8, window.innerHeight - tooltipRect.height - 8);
+  const left = Math.min(maxLeft, Math.max(8, event.clientX + offset));
+  const top = Math.min(maxTop, Math.max(8, event.clientY + offset));
+
+  elements.cloudTooltip.style.left = `${left}px`;
+  elements.cloudTooltip.style.top = `${top}px`;
+}
+
+function hideTooltip() {
+  if (!elements.cloudTooltip) {
+    return;
+  }
+
+  elements.cloudTooltip.hidden = true;
+  elements.cloudTooltip.textContent = "";
 }
 
 function computeOverlapArea(candidate, placedBounds) {
@@ -409,9 +590,9 @@ function clampTopicBounds(rect) {
 
 function estimateTopicWidth(text, fontSize) {
   const widthUnits = Array.from(String(text)).reduce((total, char) => {
-    return total + (/^[\u0000-\u00ff]$/.test(char) ? 0.6 : 1.05);
+    return total + (/^[\u0000-\u00ff]$/.test(char) ? 0.7 : 1.22);
   }, 0);
-  return Math.max(30, widthUnits * fontSize + 10);
+  return Math.max(34, widthUnits * fontSize + 18);
 }
 
 function createSvgElement(tagName) {

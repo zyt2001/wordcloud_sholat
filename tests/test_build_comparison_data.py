@@ -19,8 +19,6 @@ from src.data.build_comparison_data import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-ACADEMY_SAMPLE = ROOT / "社交网络应用" / "研究兴趣动态词云" / "datas" / "Changshe_Ma_papers_by_year.json"
-WEBSITE_SAMPLE = ROOT / "社交网络应用" / "研究兴趣动态词云" / "arxiv_year3" / "2024_papers.json"
 
 
 class BuildComparisonDataTests(unittest.TestCase):
@@ -30,6 +28,9 @@ class BuildComparisonDataTests(unittest.TestCase):
 
         academy_path = root / "academy.json"
         academy_payload = {
+            "2005": [
+                {"categories": "cs.AI", "title": "learning systems", "abstract": ""},
+            ],
             "2012": [
                 {"categories": "cs.AI", "title": "learning systems", "abstract": ""},
             ],
@@ -47,6 +48,10 @@ class BuildComparisonDataTests(unittest.TestCase):
             "2024": [
                 {"categories": "cs.DB", "title": "database systems", "abstract": ""},
                 {"categories": "physics.gen-ph", "title": "unmapped", "abstract": ""},
+            ],
+            "2025": [
+                {"categories": "cs.AI", "title": "foundation learning", "abstract": ""},
+                {"categories": "cs.CV", "title": "vision reasoning", "abstract": ""},
             ],
         }
         academy_path.write_text(json.dumps(academy_payload, ensure_ascii=False), encoding="utf-8")
@@ -69,6 +74,11 @@ class BuildComparisonDataTests(unittest.TestCase):
             "2024_papers.json": [
                 {"categories": "cs.RO", "title": "robot systems", "abstract": "medical application"},
             ],
+            "2025_papers.json": [
+                {"categories": "cs.AI", "title": "agent learning", "abstract": ""},
+                {"categories": "cs.CV", "title": "vision perception", "abstract": ""},
+                {"categories": "cs.CV", "title": "image understanding", "abstract": ""},
+            ] + [{"categories": "cs.CV", "title": f"vision sample {index}", "abstract": ""} for index in range(17)],
         }
 
         for file_name, payload in website_payloads.items():
@@ -99,18 +109,27 @@ class BuildComparisonDataTests(unittest.TestCase):
                 "2020-2021",
                 "2022-2023",
                 "2024",
+                "2025",
             ],
         )
 
     def test_academy_year_2005_falls_into_2005_2011(self):
-        counts = build_side_topic_counts("academy", file_paths=[ACADEMY_SAMPLE])
+        academy_paths, _ = self.create_sample_sources()
+        counts = build_side_topic_counts("academy", file_paths=academy_paths)
         self.assertIn("2005-2011", counts)
         self.assertGreater(sum(counts["2005-2011"].values()), 0)
 
     def test_website_year_2024_falls_into_2024_segment(self):
-        counts = build_side_topic_counts("website", file_paths=[WEBSITE_SAMPLE])
+        _, website_paths = self.create_sample_sources()
+        counts = build_side_topic_counts("website", file_paths=website_paths)
         self.assertIn("2024", counts)
         self.assertGreater(sum(counts["2024"].values()), 0)
+
+    def test_website_year_2025_falls_into_2025_segment(self):
+        _, website_paths = self.create_sample_sources()
+        counts = build_side_topic_counts("website", file_paths=website_paths)
+        self.assertIn("2025", counts)
+        self.assertGreater(sum(counts["2025"].values()), 0)
 
     def test_assign_segment_covers_all_boundaries(self):
         self.assertEqual(assign_segment(2004), None)
@@ -125,7 +144,8 @@ class BuildComparisonDataTests(unittest.TestCase):
         self.assertEqual(assign_segment(2022), "2022-2023")
         self.assertEqual(assign_segment(2023), "2022-2023")
         self.assertEqual(assign_segment(2024), "2024")
-        self.assertEqual(assign_segment(2025), None)
+        self.assertEqual(assign_segment(2025), "2025")
+        self.assertEqual(assign_segment(2026), None)
 
     def test_topic_mapping_outputs_public_topics_for_known_matches(self):
 
@@ -191,7 +211,7 @@ class BuildComparisonDataTests(unittest.TestCase):
     def test_payload_includes_segment_side_summary_structure(self):
         payload = self.build_sample_payload()
 
-        self.assertEqual(payload["range"], "2005-2024")
+        self.assertEqual(payload["range"], "2005-2025")
         self.assertEqual([segment["label"] for segment in payload["segments"]], TARGET_SEGMENTS)
 
         for segment in payload["segments"]:
@@ -212,6 +232,10 @@ class BuildComparisonDataTests(unittest.TestCase):
                     "websiteClassifiedCount",
                     "academyOtherCount",
                     "websiteOtherCount",
+                    "academySampleWarningLevel",
+                    "websiteSampleWarningLevel",
+                    "academySampleNote",
+                    "websiteSampleNote",
                 },
             )
 
@@ -276,6 +300,20 @@ class BuildComparisonDataTests(unittest.TestCase):
         self.assertEqual(summary["academyTop"][0]["key"], "ai-ml")
         self.assertEqual(summary["websiteTop"][0]["key"], "cv-multimedia")
 
+    def test_segment_summary_includes_sample_warning_fields(self):
+        payload = self.build_sample_payload()
+
+        summary = next(item for item in payload["segments"] if item["label"] == "2025")["summary"]
+
+        self.assertIn("academySampleWarningLevel", summary)
+        self.assertIn("websiteSampleWarningLevel", summary)
+        self.assertIn("academySampleNote", summary)
+        self.assertIn("websiteSampleNote", summary)
+        self.assertEqual(summary["academySampleWarningLevel"], "caution")
+        self.assertEqual(summary["websiteSampleWarningLevel"], "none")
+        self.assertTrue(summary["academySampleNote"])
+        self.assertEqual(summary["websiteSampleNote"], "")
+
     def test_same_topic_uses_same_coordinates_on_both_sides(self):
         payload = self.build_sample_payload()
 
@@ -299,7 +337,7 @@ class BuildComparisonDataTests(unittest.TestCase):
 
         self.assertEqual(
             self.find_topic(segments["2012-2016"]["academy"], "人工智能与机器学习")["state"],
-            "new",
+            "stable",
         )
         self.assertEqual(
             self.find_topic(segments["2017-2019"]["academy"], "人工智能与机器学习")["state"],
@@ -330,7 +368,7 @@ class BuildComparisonDataTests(unittest.TestCase):
         self.assertTrue(output_path.exists())
 
         payload = json.loads(output_path.read_text(encoding="utf-8"))
-        self.assertEqual(payload["range"], "2005-2024")
+        self.assertEqual(payload["range"], "2005-2025")
         self.assertEqual([segment["label"] for segment in payload["segments"]], TARGET_SEGMENTS)
 
     def test_invalid_side_raises_clear_error(self):
